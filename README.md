@@ -4,9 +4,17 @@
 # bathytools
 
 <!-- badges: start -->
+
+[![Codecov test
+coverage](https://codecov.io/gh/limnotrack/bathytools/graph/badge.svg)](https://app.codecov.io/gh/limnotrack/bathytools)
+[![R-CMD-check](https://github.com/limnotrack/bathytools/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/limnotrack/bathytools/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of bathytools is to …
+The goal of bathytools is to facilitate the generation of bathymetric
+data for lakes and reservoirs. The package provides functions to
+generate depth points from bathymetric data, and to rasterise these
+points into a bathymetric raster. The package is designed to work with
+data from the AEME project, but can be used with any bathymetric data.
 
 ## Installation
 
@@ -25,28 +33,16 @@ This is a basic example which shows you how to solve a common problem:
 ``` r
 library(bathytools)
 ## basic example code
+shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
+                                 package = "bathytools"))
+point_data <- readRDS(system.file("extdata/depth_points.rds",
+                                  package = "bathytools"))
+bathy <- rasterise_bathy(shoreline = shoreline, point_data = point_data,
+                         crs = 2193)
+#> Generating depth points... [2024-09-17 18:51:59]
+#> Finished! [2024-09-17 18:52:00]
+#> Interpolating to raster... [2024-09-17 18:52:00]
+#> Finished! [2024-09-17 18:52:24]
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
-
-``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
-```
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+<img src="man/figures/README-example-1.png" width="100%" />
