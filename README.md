@@ -18,8 +18,7 @@ data from the AEME project, but can be used with any bathymetric data.
 
 ## Installation
 
-You can install the development version of bathytools from
-[GitHub](https://github.com/) with:
+You can install the development version of bathytools from GitHub with:
 
 ``` r
 # install.packages("pak")
@@ -40,10 +39,10 @@ point_data <- readRDS(system.file("extdata/depth_points.rds",
                                   package = "bathytools"))
 bathy <- rasterise_bathy(shoreline = shoreline, point_data = point_data,
                          crs = 2193)
-#> Generating depth points... [2024-09-17 19:07:13]
-#> Finished! [2024-09-17 19:07:13]
-#> Interpolating to raster... [2024-09-17 19:07:13]
-#> Finished! [2024-09-17 19:07:37]
+#> Generating depth points... [2024-09-17 19:25:24]
+#> Finished! [2024-09-17 19:25:24]
+#> Interpolating to raster... [2024-09-17 19:25:24]
+#> Finished! [2024-09-17 19:25:50]
 ```
 
 <img src="man/figures/README-example-1.png" width="100%" />

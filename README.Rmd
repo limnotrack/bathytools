@@ -24,7 +24,7 @@ The goal of bathytools is to facilitate the generation of bathymetric data for l
 
 ## Installation
 
-You can install the development version of bathytools from [GitHub](https://github.com/) with:
+You can install the development version of bathytools from GitHub with:
 
 ``` r
 # install.packages("pak")
