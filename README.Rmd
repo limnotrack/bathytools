@@ -33,7 +33,7 @@ pak::pak("limnotrack/bathytools")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example which shows you how to generate a bathymetric raster from a shoreline and depth points:
 
 ```{r example}
 library(bathytools)

@@ -28,7 +28,8 @@ pak::pak("limnotrack/bathytools")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example which shows you how to generate a bathymetric
+raster from a shoreline and depth points:
 
 ``` r
 library(bathytools)
@@ -39,10 +40,10 @@ point_data <- readRDS(system.file("extdata/depth_points.rds",
                                   package = "bathytools"))
 bathy <- rasterise_bathy(shoreline = shoreline, point_data = point_data,
                          crs = 2193)
-#> Generating depth points... [2024-09-17 18:51:59]
-#> Finished! [2024-09-17 18:52:00]
-#> Interpolating to raster... [2024-09-17 18:52:00]
-#> Finished! [2024-09-17 18:52:24]
+#> Generating depth points... [2024-09-17 19:07:13]
+#> Finished! [2024-09-17 19:07:13]
+#> Interpolating to raster... [2024-09-17 19:07:13]
+#> Finished! [2024-09-17 19:07:37]
 ```
 
 <img src="man/figures/README-example-1.png" width="100%" />
