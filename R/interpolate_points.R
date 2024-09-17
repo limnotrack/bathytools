@@ -83,20 +83,6 @@ interpolate_points <- function(point_data, shoreline, crs, res = 2,
     df_mba <- df_mba |>
       dplyr::filter(!is.na(z))
 
-    # Final data frame with x, y, z columns
-    head(df_mba)
-
-    dimnames(mba$xyz.est$z) <- list(mba$xyz.est$x, mba$xyz.est$y)
-
-    df <- data.frame(x = mba$xyz.est$x, y = mba$xyz.est$y)
-
-    df_mba <- reshape2::melt(mba$xyz.est$z, varnames = c('x', 'y'), value.name = 'z')  |>
-      dplyr::mutate(z = round(z, 2)) |>
-      dplyr::mutate(z = dplyr::case_when(
-        z > max(coords$z) ~ max(coords$z),
-        .default = z
-      ))
-
     # Convert dataframe to raster
     interp <- terra::rast(df_mba, crs = point_crs)
     # Resample to ensure it is the correct resolution
@@ -107,7 +93,7 @@ interpolate_points <- function(point_data, shoreline, crs, res = 2,
 
   }
   # Mask the raster with the shoreline
-  bathy <- raster::mask(interp, shoreline)
+  bathy <- terra::mask(interp, shoreline)
   message("Finished! [", format(Sys.time()), "]")
 
 
