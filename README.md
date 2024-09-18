@@ -21,7 +21,7 @@ data from the AEME project, but can be used with any bathymetric data.
 This package was developed by [LimnoTrack](http://limnotrack.com/) as
 part of the Lake Ecosystem Restoration New Zealand Modelling Platform
 (LERNZmp) project.
-<a href="http://limnotrack.com/"><img src="man/figures/limnotrack_border.jpg" alt="LimnoTrack website" align="right" height="40"/></a>
+<a href="http://limnotrack.com/"><img src="man/figures/limnotrack_border.jpg" alt="LimnoTrack website" align="right" height="60"/></a>
 
 ## Installation
 
@@ -46,11 +46,11 @@ point_data <- readRDS(system.file("extdata/depth_points.rds",
                                   package = "bathytools"))
 bathy <- rasterise_bathy(shoreline = shoreline, point_data = point_data,
                          crs = 2193)
-#> Generating depth points... [2024-09-18 15:05:17]
-#> Finished! [2024-09-18 15:05:18]
-#> Interpolating to raster... [2024-09-18 15:05:18]
+#> Generating depth points... [2024-09-18 15:27:27]
+#> Finished! [2024-09-18 15:27:27]
+#> Interpolating to raster... [2024-09-18 15:27:27]
 #> Adjusting depths >= 0
-#> Finished! [2024-09-18 15:05:39]
+#> Finished! [2024-09-18 15:27:49]
 ```
 
 <img src="man/figures/README-example-1.png" width="100%" />

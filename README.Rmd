@@ -24,7 +24,7 @@ The goal of bathytools is to facilitate the generation of bathymetric data for l
 
 ## Development
 
-This package was developed by [LimnoTrack](http://limnotrack.com/) as part of the Lake Ecosystem Restoration New Zealand Modelling Platform (LERNZmp) project. <a href="http://limnotrack.com/"><img src="man/figures/limnotrack_border.jpg" alt="LimnoTrack website" align="right" height="40"/></a>
+This package was developed by [LimnoTrack](http://limnotrack.com/) as part of the Lake Ecosystem Restoration New Zealand Modelling Platform (LERNZmp) project. <a href="http://limnotrack.com/"><img src="man/figures/limnotrack_border.jpg" alt="LimnoTrack website" align="right" height="60"/></a>
 
 ## Installation
 
