@@ -3,9 +3,13 @@
 <url><loc>https://limnotrack.github.io/bathytools/LICENSE.html</loc></url>
 <url><loc>https://limnotrack.github.io/bathytools/authors.html</loc></url>
 <url><loc>https://limnotrack.github.io/bathytools/index.html</loc></url>
+<url><loc>https://limnotrack.github.io/bathytools/reference/bathy_to_hypso.html</loc></url>
 <url><loc>https://limnotrack.github.io/bathytools/reference/generate_depth_points.html</loc></url>
+<url><loc>https://limnotrack.github.io/bathytools/reference/get_lake_surface_elevation.html</loc></url>
 <url><loc>https://limnotrack.github.io/bathytools/reference/index.html</loc></url>
 <url><loc>https://limnotrack.github.io/bathytools/reference/interpolate_points.html</loc></url>
+<url><loc>https://limnotrack.github.io/bathytools/reference/merge_bathy_dem.html</loc></url>
 <url><loc>https://limnotrack.github.io/bathytools/reference/rasterise_bathy.html</loc></url>
+<url><loc>https://limnotrack.github.io/bathytools/reference/tm_dem_bath.html</loc></url>
 </urlset>
 
