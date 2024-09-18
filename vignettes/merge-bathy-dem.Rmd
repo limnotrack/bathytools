@@ -1,0 +1,156 @@
+---
+title: "Merge Bathymetry with DEM data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Merge Bathymetry with DEM data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Lake bathymetry data is useful for a range of applications, including habitat mapping, water quality monitoring, and hydrodynamic modelling. However, lakes sit within a landscape, and it is often useful to know how the bathymetry data relates to the surrounding topography. This is particularly important for hydrodynamic modelling of lakes with large fluctuations in water level, or for flood risk assessments in the surrounding area. 
+
+This vignette demonstrates how to merge bathymetry data with a Digital Elevation Model (DEM) raster using the `merge_bathy_dem()` function.
+
+## Load the data
+
+We will use the bathytools package to merge bathymetry data with a DEM raster. The package includes example data for Lake Rotoma, New Zealand. The bathymetry data is stored as a XYZ data.frame in an .rds file within the package. Whereas the DEM data is stored as a raster in a [TIF file](https://en.wikipedia.org/wiki/TIFF). The DEM raster was prepared from LiDAR data provided by [Land Information New Zealand](https://www.linz.govt.nz/) and can be downloaded [here](https://data.linz.govt.nz/layer/105690-bay-of-plenty-lidar-1m-dem-2019-2022/).
+
+
+We will also use a shapefile of the lake shoreline and a shapefile of the lake catchment. These were both sourced from the [Freshwater Ecosytems of New Zealand](https://www.doc.govt.nz/our-work/freshwater-ecosystems-of-new-zealand/) database.
+
+
+```{r setup}
+library(bathytools)
+library(tmap) # Used for plotting spatial data
+```
+
+```{r load-shoreline-data}
+shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
+                                 package = "bathytools"))
+catchment <- readRDS(system.file("extdata/rotoma_catchment.rds",
+                                   package = "bathytools"))
+```
+
+The example lake we will be looking at is Lake Rotoma in the Bay of Plenty Region on the North Island of Aotearoa New Zealand. The lake is a popular recreational spot for fishing and boating. 
+
+The [tmap](https://r-tmap.github.io/tmap/) package is used to plot spatial data. The `tmap_mode("view")` function is used to display the map in the viewer pane in RStudio. The `tmap_options(basemaps = "Esri.WorldImagery")` function is used to set the basemap to a satellite image.
+It is similar to the `ggplot2` package, but is specifically designed for spatial data.
+Here we plot the lake shoreline in light blue and the lake catchment in pink.
+
+```{r plot-shoreline}
+tmap_mode("view")
+tmap_options(basemaps = "Esri.WorldImagery")
+
+tm_shape(shoreline) +
+  tm_borders(col = "#8DA0CB", lwd = 2) +
+  tm_shape(catchment) +
+  tm_borders(col = "#E78AC3", lwd = 2) 
+
+```
+
+The depth data is stored in XYZ format, with the x and y coordinates representing the location of the depth point, and the z coordinate representing the depth in meters. The depth data is stored as a data.frame in an .rds file within the package. Here we show the first few rows of the depth data.
+
+```{r view-depth-point}
+point_data <- readRDS(system.file("extdata/depth_points.rds",
+                                  package = "bathytools"))
+head(point_data)
+
+```
+
+
+
+```{r plot-dem}
+dem_raster <- terra::rast(system.file("extdata/dem_32m.tif",
+                                      package = "bathytools"))
+tm_shape(dem_raster) +
+  tm_raster(alpha = 0.5, style = "cont", palette = "-YlGnBu") +
+  tm_shape(shoreline) +
+  tm_borders(col = "#FC8D62", lwd = 2) +
+  tm_shape(catchment) +
+  tm_borders(col = "#A6D854", lwd = 2) 
+
+```
+
+## Generate the bathymetry raster
+
+The first step is to generate a bathymetry raster from the shoreline and depth data. The `rasterise_bathy()` function is used to generate the bathymetry raster. The function takes the shoreline, depth data, and the coordinate reference system (CRS) as inputs. The function returns a `SpatRaster` object representing the bathymetry raster.
+
+```{r generate-bathy-raster}
+
+bathy_raster <- rasterise_bathy(shoreline = shoreline,
+                                point_data = point_data, crs = 2193,
+                                res = 8)
+```
+
+```{r plot-bathy}
+tm_shape(dem_raster) +
+  tm_raster(alpha = 0.5, style = "cont", palette = "-YlGnBu") +
+  tm_shape(bathy_raster) +
+  tm_raster(style = "cont", palette = "-viridis", breaks = seq(-90, 0, by = 10)) +
+  tm_shape(shoreline) +
+  tm_borders(col = "#FC8D62", lwd = 2) +
+  tm_shape(catchment) +
+  tm_borders(col = "#A6D854", lwd = 2) 
+```
+
+
+## Merge the bathymetry with the DEM
+
+The next step is to merge the bathymetry raster with the DEM raster. The `merge_bathy_dem()` function is used to merge the bathymetry raster with the DEM raster. The function takes the shoreline, bathymetry raster, DEM raster, and catchment shapefile as inputs. The function returns a `SpatRaster` object representing the merged bathymetry and DEM data.
+
+If the resolution of the bathymetry raster is different from the DEM raster, the bathymetry raster will be resampled to match the resolution of the DEM raster.
+
+```{r merge-bathy-dem}
+
+dem_bath <- merge_bathy_dem(shoreline = shoreline, bathy_raster = bathy_raster,
+                            dem_raster = dem_raster, catchment = catchment)
+dem_bath
+```
+Here we plot the merged raster with the lake and catchment boundaries.
+
+```{r plot-merged}
+tm_shape(dem_bath) +
+  tm_raster(alpha = 0.5, style = "cont", palette = "-YlGnBu") +
+  tm_shape(shoreline) +
+  tm_borders(col = "#FC8D62", lwd = 2) +
+  tm_shape(catchment) +
+  tm_borders(col = "#A6D854", lwd = 2) 
+```
+
+The colours in this plot do not clearly distinguish between the bathymetry and DEM data. We will add a break at the surface elevation of the lake to better distinguish between the two datasets. We can extract the water surface elevation from the DEM data using the `get_lake_surface_elevation()` function.
+
+```{r get-lake-surface-elevation}
+lake_elev <- get_lake_surface_elevation(dem_raster = dem_raster,
+                                        shoreline = shoreline)
+```
+
+We can now plot the merged raster with the lake surface elevation as the break
+in the colour palette.
+
+```{r plot-merged-break}
+
+tm_dem_bath(dem_bath = dem_bath, lake_elev = lake_elev)
+
+```
+
+
+## Saving the merged raster
+
+The merged raster can be saved to a file using the `terra::writeRaster()` function. The function takes the raster object and the file path as inputs.
+
+It is important to note that `SpatRaster` can not be saved as ".rds" files.
+They can also be quite large, so it is recommended to save the raster in a compressed format, such as GeoTIFF.
+
+```{r save-merged-raster, eval = FALSE}
+
+terra::writeRaster(dem_bath, "dem_bath.tif", overwrite = TRUE)
+
+```
+
