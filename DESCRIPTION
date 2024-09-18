@@ -16,9 +16,12 @@ Imports:
     MBA,
     sf,
     terra,
+    tmap,
     units
 Suggests: 
-    testthat (>= 3.0.0),
-    tmap
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3
 URL: https://limnotrack.github.io/bathytools/
+VignetteBuilder: knitr
