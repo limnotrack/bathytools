@@ -2,11 +2,12 @@
 #'
 #' @param shoreline sf object of lake shoreline.
 #' @param islands sf object of lake islands if present.
-#' @param points sf object of depth points. Must contain a "depth" column. If
-#' NULL, then contours must be provided.
+#' @param point_data sf object of depth points. Must contain a "depth" column.
+#' If NULL, then contours must be provided.
 #' @param contours sf object of depth contours. If NULL, then points must be
 #' provided.
 #' @param res numeric resolution of output raster in metres.
+#' @param subsample logical subsample points to 10000 if TRUE. Default is TRUE.
 #' @inheritParams sf::st_transform
 #'
 #' @importFrom sf st_cast st_length st_area st_transform st_intersection st_crs

@@ -94,6 +94,16 @@ interpolate_points <- function(point_data, shoreline, crs, res = 2,
   }
   # Mask the raster with the shoreline
   bathy <- terra::mask(interp, shoreline)
+
+  # Check max values and ensure all are below 0
+  mm <- terra::minmax(bathy)
+  if (mm[2] >= 0) {
+    message("Adjusting depths >= 0")
+    # surf <- bathy > -0.5
+    # terra::plot(surf)
+    bathy[bathy > -0.5] <- -0.5
+  }
+
   message("Finished! [", format(Sys.time()), "]")
 
 

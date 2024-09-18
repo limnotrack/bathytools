@@ -19,15 +19,17 @@ generate_depth_points(
 
 \item{islands}{sf object of lake islands if present.}
 
+\item{point_data}{sf object of depth points. Must contain a "depth" column.
+If NULL, then contours must be provided.}
+
 \item{contours}{sf object of depth contours. If NULL, then points must be
 provided.}
 
 \item{res}{numeric resolution of output raster in metres.}
 
-\item{crs}{target coordinate reference system: object of class \code{crs}, or input string for \link[sf]{st_crs}}
+\item{subsample}{logical subsample points to 10000 if TRUE. Default is TRUE.}
 
-\item{points}{sf object of depth points. Must contain a "depth" column. If
-NULL, then contours must be provided.}
+\item{crs}{target coordinate reference system: object of class \code{crs}, or input string for \link[sf]{st_crs}}
 }
 \value{
 sf object of depth points.

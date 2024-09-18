@@ -1,8 +1,8 @@
 #' Generate depth points for interpolation
 #'
 #' @inheritParams generate_depth_points
+#' @inheritParams interpolate_points
 #' @param method character interpolation method. Options are 'MBA' (default),
-#' @param cores numeric number of cores to use for interpolation.
 #' @inheritParams sf::st_transform
 #' @inheritParams MBA::mba.surf
 #'

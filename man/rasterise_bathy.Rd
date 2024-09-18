@@ -24,14 +24,21 @@ rasterise_bathy(
 
 \item{islands}{sf object of lake islands if present.}
 
+\item{point_data}{sf object of depth points. Must contain a "depth" column.
+If NULL, then contours must be provided.}
+
 \item{contours}{sf object of depth contours. If NULL, then points must be
 provided.}
 
 \item{res}{numeric resolution of output raster in metres.}
 
+\item{subsample}{logical subsample points to 10000 if TRUE. Default is TRUE.}
+
 \item{crs}{target coordinate reference system: object of class \code{crs}, or input string for \link[sf]{st_crs}}
 
 \item{method}{character interpolation method. Options are 'MBA' (default),}
+
+\item{print_plot}{logical print plot of interpolated raster.}
 
 \item{n}{initial size of the spline space in the hierarchical
     construction along the x axis. If the rectangular domain is a
@@ -46,8 +53,6 @@ provided.}
     n = m = 1 and h = 8, the resulting spline surface has a coefficient
     grid of size \eqn{2^h}{2^h} + 3 = 259 in each direction of the
     spline surface. See references for additional information. }
-
-\item{cores}{numeric number of cores to use for interpolation.}
 }
 \value{
 sf object of depth points.

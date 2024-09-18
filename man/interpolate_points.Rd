@@ -17,6 +17,9 @@ interpolate_points(
 )
 }
 \arguments{
+\item{point_data}{sf object of depth points. Must contain a "depth" column.
+If NULL, then contours must be provided.}
+
 \item{shoreline}{sf object of lake shoreline.}
 
 \item{crs}{target coordinate reference system: object of class \code{crs}, or input string for \link[sf]{st_crs}}
