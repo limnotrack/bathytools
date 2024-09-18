@@ -2,7 +2,9 @@
 #'
 #' @param shoreline sf object of lake shoreline.
 #' @param islands sf object of lake islands if present.
-#' @param point_data sf object of depth points. Must contain a "depth" column.
+#' @param point_data sf object of depth points or a dataframe of points with
+#' columns 'lon' and 'lat'. Must contain a "depth" column. If NULL, then
+#' contours must be provided.
 #' If NULL, then contours must be provided.
 #' @param contours sf object of depth contours. If NULL, then points must be
 #' provided.
@@ -190,18 +192,16 @@ generate_depth_points <- function(shoreline, islands = NULL, point_data = NULL,
     }
 
     # If point_data are a dataframe, convert to sf object
-    if (is.data.frame(point_data)) {
-
+    if (is(point_data, "sf")) {
+      pts <- point_data |>
+        dplyr::select(depth, geometry)
+    } else if (is.data.frame(point_data)) {
       if (!all(c("lon", "lat", "depth") %in% names(point_data))) {
         stop("point_data must have columns 'lon', 'lat', and 'depth'")
       }
-
       pts <- sf::st_as_sf(point_data, coords = c("lon", "lat"),
                           crs = 4326) |>
         dplyr::mutate(depth = point_data$depth) |>
-        dplyr::select(depth, geometry)
-    } else if (is(sf::st_geometry(point_data), "POINT")) {
-      pts <- point_data |>
         dplyr::select(depth, geometry)
     }
     pts <- sf::st_transform(pts, crs)

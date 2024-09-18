@@ -17,7 +17,9 @@ interpolate_points(
 )
 }
 \arguments{
-\item{point_data}{sf object of depth points. Must contain a "depth" column.
+\item{point_data}{sf object of depth points or a dataframe of points with
+columns 'lon' and 'lat'. Must contain a "depth" column. If NULL, then
+contours must be provided.
 If NULL, then contours must be provided.}
 
 \item{shoreline}{sf object of lake shoreline.}
