@@ -3,7 +3,7 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="../index.html">bathytools</a>
 
@@ -16,6 +16,10 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/merge-bathy-dem.html">Merge Bathymetry with DEM data</a></li>
+  </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
       </ul></div>
@@ -93,11 +97,11 @@ to the catchment boundary. Requires catchment to be provided.</p></dd>
 <span class="r-in"><span>package <span class="op">=</span> <span class="st">"bathytools"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">bathy_raster</span> <span class="op">&lt;-</span> <span class="fu"><a href="rasterise_bathy.html">rasterise_bathy</a></span><span class="op">(</span>shoreline <span class="op">=</span> <span class="va">shoreline</span>,</span></span>
 <span class="r-in"><span>point_data <span class="op">=</span> <span class="va">point_data</span>, crs <span class="op">=</span> <span class="fl">2193</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Generating depth points... [2024-09-18 03:01:59]</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Finished! [2024-09-18 03:02:00]</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Interpolating to raster... [2024-09-18 03:02:00]</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Generating depth points... [2024-09-18 03:10:27]</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Finished! [2024-09-18 03:10:27]</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Interpolating to raster... [2024-09-18 03:10:27]</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Adjusting depths &gt;= 0</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Finished! [2024-09-18 03:02:20]</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Finished! [2024-09-18 03:10:46]</span>
 <span class="r-plt img"><img src="merge_bathy_dem-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">dem_raster</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/dem_32m.tif"</span>,</span></span>
 <span class="r-in"><span>package <span class="op">=</span> <span class="st">"bathytools"</span><span class="op">)</span><span class="op">)</span></span></span>
