@@ -2,7 +2,7 @@ Package: bathytools
 Title: Tools to handle bathymetric data
 Version: 0.0.0.9000
 Authors@R: c(person("Tadhg", "Moore", role = c("aut","cre"),
-    email = "tadhg@limnotrack.com"),
+    email = "tadhg@limnotrack.com", comment = c(ORCID = "0000-0002-3834-8868")),
     person("Chris", "McBride", role = "aut",
     email = "chris@limnotrack.com"))
 Description: Generate bathymetry raster files from survey data and merge with
