@@ -22,6 +22,10 @@ knitr::opts_chunk$set(
 
 The goal of bathytools is to facilitate the generation of bathymetric data for lakes and reservoirs. The package provides functions to generate depth points from bathymetric data, and to rasterise these points into a bathymetric raster. The package is designed to work with data from the AEME project, but can be used with any bathymetric data.
 
+## Development
+
+This package was developed by [LimnoTrack](http://limnotrack.com/) as part of the Lake Ecosystem Restoration New Zealand Modelling Platform (LERNZmp) project. <a href="http://limnotrack.com/"><img src="man/figures/limnotrack_border.jpg" alt="LimnoTrack website" align="right" height="40"/></a>
+
 ## Installation
 
 You can install the development version of bathytools from GitHub with:
