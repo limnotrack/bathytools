@@ -108,13 +108,9 @@ plot_raster_3d <- function(x, fact = 0, cols = "topo", split_lake = FALSE,
     if (is.null(shoreline)) {
       stop("shoreline must be provided if using split_lake = TRUE")
     }
-    if (!is.null(shoreline)) {
-      bathy_agg <- terra::mask(ras_agg, shoreline, touches = FALSE)
-      if (!is.null(lake_elev)) {
-        bathy_agg[bathy_agg > lake_elev] <- NA
-      }
-    } else {
-      bathy_agg <- ras_agg
+    bathy_agg <- terra::mask(ras_agg, shoreline, touches = FALSE)
+    if (!is.null(lake_elev)) {
+      bathy_agg[bathy_agg > lake_elev] <- NA
     }
     # create a false lip around the lake
     bathy_agg[is.na(bathy_agg[])] <- max(terra::values(bathy_agg), na.rm = TRUE)
