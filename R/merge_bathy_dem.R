@@ -49,6 +49,12 @@ merge_bathy_dem <- function(shoreline, bathy_raster, dem_raster,
     }
   }
 
+  if (crop_dem_to_catchment) {
+    if (is.null(catchment)) {
+      stop("catchment must be provided to crop dem_raster.")
+    }
+  }
+
   # Check if bathy_raster is within the extent of dem_raster
   dem_sf <- spat_raster_to_sf(dem_raster)
   bathy_sf <- spat_raster_to_sf(bathy_raster)
