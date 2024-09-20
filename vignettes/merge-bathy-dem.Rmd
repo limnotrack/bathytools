@@ -113,6 +113,10 @@ dem_bath <- merge_bathy_dem(shoreline = shoreline, bathy_raster = bathy_raster,
                             dem_raster = dem_raster, catchment = catchment)
 dem_bath
 ```
+
+### Spatial plot of the merged raster
+
+
 Here we plot the merged raster with the lake and catchment boundaries.
 
 ```{r plot-merged}
@@ -140,6 +144,14 @@ tm_dem_bath(dem_bath = dem_bath, lake_elev = lake_elev)
 
 ```
 
+### 3-D plot of the merged raster
+
+The `plot_raster_3d()` function can be used to create a 3-D plot of the merged raster. The function takes the merged raster and the shoreline as inputs. The `fact` argument controls the aggregation factor for the raster. A higher factor will result in a smoother plot, but will take longer to render.
+
+```{r plot-3d}
+p1 <- plot_raster_3d(x = dem_bath, shoreline = shoreline, split_lake = TRUE)
+p1
+```
 
 ## Saving the merged raster
 
