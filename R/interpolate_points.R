@@ -99,9 +99,13 @@ interpolate_points <- function(point_data, shoreline, crs, res = 2,
   mm <- terra::minmax(bathy)
   if (mm[2] >= 0) {
     message("Adjusting depths >= 0")
+    min_depth <- mm[1]
+    adj_depth <- round(0.01 * min_depth, 2)
+    print(paste("Adjusting depths >= 0 to ", adj_depth))
+
     # surf <- bathy > -0.5
     # terra::plot(surf)
-    bathy[bathy > -0.5] <- -0.5
+    bathy[bathy > adj_depth] <- adj_depth
   }
 
   message("Finished! [", format(Sys.time()), "]")
