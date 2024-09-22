@@ -30,24 +30,9 @@
 
 bathy_to_hypso <- function(bathy_raster, surface = 0, depths = 1) {
 
-  if (!is(bathy_raster, "SpatRaster")) {
-    stop("bathy_raster must be a SpatRaster object")
-  }
+  # Get depths
+  depth_out <- get_depths(bathy_raster, surface, depths)
 
-  # Get min/max of bathy object
-  mm <- terra::minmax(bathy_raster)
-
-  if (length(depths) == 1) {
-    depth_out <- seq(from = surface, to = mm[1], by = -depths)
-  } else if (length(depths) > 1) {
-    depth_out <- depths
-  }
-  if (!mm[1] %in% depths) {
-    depth_out <- c(depth_out, mm[1])
-  }
-
-  # Round depth_out to 2 decimal
-  depth_out <- round(depth_out, 2)
 
   # Get resolution of bathy object
   res <- terra::res(bathy_raster)
