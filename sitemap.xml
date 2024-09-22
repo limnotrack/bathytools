@@ -7,7 +7,10 @@
 <url><loc>https://limnotrack.github.io/bathytools/index.html</loc></url>
 <url><loc>https://limnotrack.github.io/bathytools/reference/bathy_to_hypso.html</loc></url>
 <url><loc>https://limnotrack.github.io/bathytools/reference/generate_depth_points.html</loc></url>
+<url><loc>https://limnotrack.github.io/bathytools/reference/get_contours.html</loc></url>
+<url><loc>https://limnotrack.github.io/bathytools/reference/get_depths.html</loc></url>
 <url><loc>https://limnotrack.github.io/bathytools/reference/get_lake_surface_elevation.html</loc></url>
+<url><loc>https://limnotrack.github.io/bathytools/reference/get_shoreline.html</loc></url>
 <url><loc>https://limnotrack.github.io/bathytools/reference/index.html</loc></url>
 <url><loc>https://limnotrack.github.io/bathytools/reference/interpolate_points.html</loc></url>
 <url><loc>https://limnotrack.github.io/bathytools/reference/merge_bathy_dem.html</loc></url>
