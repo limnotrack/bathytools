@@ -139,8 +139,29 @@ We can now plot the merged raster with the lake surface elevation as the break
 in the colour palette.
 
 ```{r plot-merged-break}
-
 tm_dem_bath(dem_bath = dem_bath, lake_elev = lake_elev)
+```
+
+### Hypsograph of the merged raster
+
+A hypsograph is a plot of the area of a lake at different depths. The `bathy_to_hypso()` function can be used to generate a hypsograph from the bathymetry raster. The function takes the bathymetry raster as input and returns a data frame with the depth and area at each depth.
+
+```{r hypsograph}
+
+hyps <- bathy_to_hypso(bathy_raster = bathy_raster)
+head(hyps)
+```
+
+The hypsograph can be plotted to show the area of the lake at different depths.
+
+```{r plot-hypsograph}
+library(ggplot2)
+
+ggplot(hyps, aes(x = area, y = depth)) +
+  geom_line() +
+  geom_point() +
+  labs(x = "Area (m^2)", y = "Depth (m)") +
+  theme_bw()
 
 ```
 
@@ -161,8 +182,6 @@ It is important to note that `SpatRaster` can not be saved as ".rds" files.
 They can also be quite large, so it is recommended to save the raster in a compressed format, such as GeoTIFF.
 
 ```{r save-merged-raster, eval = FALSE}
-
 terra::writeRaster(dem_bath, "dem_bath.tif", overwrite = TRUE)
-
 ```
 
