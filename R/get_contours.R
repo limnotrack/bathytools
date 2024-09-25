@@ -32,9 +32,21 @@ get_contours <- function(bathy_raster, surface = 0, depths = 1) {
     dplyr::rename(depth = level)
 
   # Check if min depth is in depths
-  if (!min(terra::values(bathy_raster)) %in% depth_out) {
-    warning("Minimum depth not in depths.")
-    # cont <- dplyr::bind_rows(cont, tibble::tibble(depth = min(terra::values(bathy_raster))))
+  mm <- terra::minmax(bathy_raster)
+  if (!mm[1] %in% depth_out) {
+    warning("Minimum depth not in depths. Adding minimum depth to contours.")
+
+    min_contour <- min(cont$depth)
+
+    btm <- bathy_raster <= (mm[1] + 0.1)
+    # terra::plot(btm)
+    btm_cont <- btm |>
+      terra::as.polygons() |>
+      sf::st_as_sf() |>
+      dplyr::filter(depth == 1) |>
+      dplyr::mutate(depth = mm[1])
+
+    cont <- dplyr::bind_rows(cont, btm_cont)
   }
 
   return(cont)
