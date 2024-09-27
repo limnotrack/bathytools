@@ -100,7 +100,7 @@ interpolate_points <- function(point_data, shoreline, crs, res = 2,
   if (mm[2] >= 0) {
     min_depth <- mm[1]
     adj_depth <- round(0.01 * min_depth, 2)
-    adj_depth <- ifelse(adj_depth < 0.4, 0.4, adj_depth)
+    adj_depth <- ifelse(adj_depth > -0.4, -0.4, adj_depth)
     message(paste("Adjusting depths >= 0 to ", adj_depth, "m"))
 
     # surf <- bathy > -0.5
