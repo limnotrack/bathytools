@@ -137,48 +137,119 @@ generate_depth_points <- function(shoreline, islands = NULL, point_data = NULL,
     # Sample points regularly for each depth polygon
     cont_pnts <- lapply(unique(contours$depth), function(d) {
 
-      perim <- contours |>
-        dplyr::filter(depth == d) |>
-        sf::st_cast("MULTILINESTRING") |>
-        sf::st_length() |>
-        units::set_units("m") |>
-        units::drop_units()
-      np <- round(perim / res)
-
-      p <- contours |>
-        dplyr::filter(depth == d) |>
+      sel_cont <- contours |>
+        dplyr::filter(depth == d)
+      lstring <- sel_cont$geometry |>
         sf::st_cast("MULTILINESTRING") |>
         sf::st_cast("LINESTRING") |>
-        sf::st_line_sample(n = 10, type = "regular") |>
-        # sf::st_sample(np, type = "regular") |>
+        sf::st_as_sf()
+
+      p <- line_to_points(lstring$x, res) |>
+        # sf::st_cast("POINT") |>
         sf::st_as_sf() |>
-        sf::st_cast("POINT") |>
         dplyr::mutate(depth = d) |>
         dplyr::rename(geometry = x)
+      p <- p[!sf::st_is_empty(p$geometry), ] |>
+        sf::st_cast("POINT")
+      return(p)
 
-      line_string <- contours |>
-        dplyr::filter(depth == d) |>
-        sf::st_cast("MULTILINESTRING") |>
-        sf::st_cast("LINESTRING")
 
-      p <- lapply(1:nrow(line_string), \(i) {
-        lgth <- units::drop_units(sf::st_length(line_string[i, ]))
-        np <- ceiling(lgth / res)
-
-        line_string[i, ] |>
-          sf::st_line_sample(n = np, type = "regular") |>
-          # sf::st_sample(np, type = "regular") |>
-          sf::st_as_sf() |>
-          sf::st_cast("POINT") |>
-          dplyr::mutate(depth = d) |>
-          dplyr::rename(geometry = x)
-      }) |>
-        dplyr::bind_rows()
-      p
+      # tm_shape(sel_cont) +
+      #   tm_lines(col = "depth", lwd = 1, style = "cont")
+      # sel_cont |>
+      #   sf::st_as_sfc() |>
+      #   sf::st_line_sample(n = 10, type = "regular")
+      # mlstring <- sel_cont$geometry |>
+      #   sf::st_cast("MULTILINESTRING")
+      # perim <- mlstring |>
+      #   sf::st_length() |>
+      #   units::set_units("m") |>
+      #   units::drop_units()
+      #
+      # lstring <- mlstring |>
+      #   sf::st_cast("LINESTRING") |>
+      #   sf::st_as_sf() |>
+      #   dplyr::mutate(length = units::drop_units(sf::st_length(x)),
+      #                 np = ceiling(length / res),
+      #                 id = dplyr::row_number())
+      #
+      # p <- lstring |>
+      #   dplyr::group_by(id) |>
+      #   dplyr::summarise(l = line2p(x, res))
+      #   # sf::st_line_sample(n = np, type = "regular")
+      #   dplyr::mutate(p = line2p(x, res))
+      # tm_shape(p) +
+      #   tm_dots()
+      #
+      #
+      #
+      # # np <- round((perim / res) / length(lstring))
+      # out <- lapply(1:nrow(lstring), \(i) {
+      #   lstring[i, ] |>
+      #     sf::st_line_sample(n = lstring$np[i], type = "regular") |>
+      #     sf::st_cast("POINT") |>
+      #     sf::st_as_sf()
+      # }) |>
+      #   dplyr::bind_rows()
+      #
+      # p <- lstring |>
+      #   sf::st_line_sample(n = np, type = "regular") |>
+      #   sf::st_cast("POINT") |>
+      #   sf::st_as_sf()
+      #
+      #
+      # p <- lapply(1:length(lstring), \(i) {
+      #   lgth <- units::drop_units(sf::st_length(lstring[i, ]))
+      #   np2 <- ceiling(lgth / res)
+      #
+      #   lstring[i, ] |>
+      #     sf::st_line_sample(n = np2, type = "regular") |>
+      #     sf::st_cast("POINT")
+      # })
+      # p <- sel_cont |>
+      #   sf::st_cast("MULTILINESTRING") |>
+      #   sf::st_cast("LINESTRING") |>
+      #   sf::st_line_sample(n = np, type = "regular") |>
+      #   sf::st_as_sf()
+      # tm_shape(p[1, ]) +
+      #   tm_dots()
+      #
+      # p <- contours |>
+      #   dplyr::filter(depth == d) |>
+      #   sf::st_cast("MULTILINESTRING") |>
+      #   sf::st_cast("LINESTRING") |>
+      #   sf::st_line_sample(n = 10, type = "regular") |>
+      #   # sf::st_sample(np, type = "regular") |>
+      #   sf::st_as_sf() |>
+      #   sf::st_cast("POINT") |>
+      #   dplyr::mutate(depth = d) |>
+      #   dplyr::rename(geometry = x)
+      #
+      # line_string <- contours |>
+      #   dplyr::filter(depth == d) |>
+      #   sf::st_cast("MULTILINESTRING") |>
+      #   sf::st_cast("LINESTRING")
+      #
+      # p <- lapply(1:nrow(line_string), \(i) {
+      #   lgth <- units::drop_units(sf::st_length(line_string[i, ]))
+      #   np <- ceiling(lgth / res)
+      #
+      #   line_string[i, ] |>
+      #     sf::st_line_sample(n = np, type = "regular") |>
+      #     # sf::st_sample(np, type = "regular") |>
+      #     sf::st_as_sf() |>
+      #     sf::st_cast("POINT") |>
+      #     dplyr::mutate(depth = d) |>
+      #     dplyr::rename(geometry = x)
+      # }) |>
+      #   dplyr::bind_rows()
+      # p
     }) |>
       dplyr::bind_rows() |>
       sf::st_as_sf() |>
       dplyr::select(depth, geometry)
+    # tm_shape(cont_pnts) +
+    #   tm_dots()
   }
 
   # If point_data dataframe is provided, convert to sf object
@@ -256,12 +327,11 @@ generate_depth_points <- function(shoreline, islands = NULL, point_data = NULL,
   }
 
   # Subset point_data to those within the lake
-  # sub1 <- point_data[sf::st_within(point_data, shoreline_poly, sparse = FALSE), ]
-  suppressWarnings({
-    sub <- point_data |>
-      sf::st_intersection(shoreline_poly) |>
-      dplyr::select(depth)
-  })
+  idx <- sf::st_intersects(point_data$geometry,
+                           shoreline_poly$geometry, sparse = FALSE) |>
+    as.vector()
+  sub <- point_data |>
+    dplyr::filter(idx)
 
   # Combine in-lake point_data & outline
   all <- dplyr::bind_rows(pnt_outline, pnt_inset, sub) |>
@@ -279,4 +349,16 @@ generate_depth_points <- function(shoreline, islands = NULL, point_data = NULL,
   }
   message("Finished! [", format(Sys.time()), "]")
   return(all)
+}
+
+#' Convert a LINESTRING to POINTS
+#' @param geometry sf LINESTRING
+#' @param res numeric resolution of output points in metres.
+#' @return sf POINTS
+#' @noRd
+line_to_points <- function(geometry, res) {
+  lgth <- units::drop_units(sf::st_length(geometry))
+  np <- ceiling(lgth / res)
+  geometry |>
+    sf::st_line_sample(n = np, type = "regular")
 }
