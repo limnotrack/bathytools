@@ -12,7 +12,7 @@ navbar:
     left:  [intro, reference, articles, tutorials, news]
     right: [search, github]
 home:
-  title: aemetools - Improve ecosystem modelling
+  title: bathytools - Process lake bathymetry and catchment elevation data
   sidebar:
     structure: [links, license, community, citation, authors, dev, toc]
 
