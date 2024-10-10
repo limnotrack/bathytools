@@ -53,6 +53,12 @@ test_that("can generate hypsograph", {
   frac <- area_diff / shore_area
   # Test less than 1% difference in surface area calculation
   testthat::expect_true(frac < 0.01)
+
+  vol1 <- calculate_lake_volume(bathy_raster = bathy_raster)
+  vol2 <- calculate_lake_volume(hyps = hyps)
+  vd <- abs(vol1 - vol2)
+  frac2 <- vd / vol1
+  testthat::expect_true(frac2 < 0.01)
 })
 
 test_that("can merge bathy with DEM", {
