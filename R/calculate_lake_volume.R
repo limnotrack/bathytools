@@ -6,6 +6,8 @@
 #' provided, the volume will be calculated to this depth. If not provided, the
 #' volume will be calculated to the maximum depth of the bathymetry raster or
 #' the hypsograph.
+#' @param return_rast logical. If TRUE, return a raster with the calculated
+#' volume in each grid cell. Default is FALSE.
 #'
 #' @return numeric. The volume of the lake in cubic meters.
 #' @export
@@ -19,7 +21,8 @@
 #' calculate_lake_volume(bathy_raster = bathy_raster)
 #'
 
-calculate_lake_volume <- function(bathy_raster = NULL, hyps = NULL, depth = NULL) {
+calculate_lake_volume <- function(bathy_raster = NULL, hyps = NULL,
+                                  depth = NULL, return_rast = FALSE) {
 
   if (!is.null(bathy_raster)) {
     if (!is(bathy_raster, "SpatRaster")) {
@@ -40,6 +43,10 @@ calculate_lake_volume <- function(bathy_raster = NULL, hyps = NULL, depth = NULL
     # Calculate volume for each cell (cell area * depth)
     # Make sure to take the absolute value if depth is negative (e.g., below sea level)
     cell_volume <- cell_area * abs(terra::values(adj_bathy))
+
+    if (return_rast) {
+      return(cell_volume)
+    }
 
     # Sum the cell volumes to get the total lake volume (in cubic meters)
     total_volume <- sum(terra::values(cell_volume), na.rm = TRUE)

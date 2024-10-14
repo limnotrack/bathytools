@@ -4,7 +4,12 @@
 \alias{calculate_lake_volume}
 \title{Calculate the volume of a lake using bathymetry data or a hypsograph}
 \usage{
-calculate_lake_volume(bathy_raster = NULL, hyps = NULL, depth = NULL)
+calculate_lake_volume(
+  bathy_raster = NULL,
+  hyps = NULL,
+  depth = NULL,
+  return_rast = FALSE
+)
 }
 \arguments{
 \item{bathy_raster}{SpatRaster object with the bathymetry data.}
@@ -15,6 +20,9 @@ calculate_lake_volume(bathy_raster = NULL, hyps = NULL, depth = NULL)
 provided, the volume will be calculated to this depth. If not provided, the
 volume will be calculated to the maximum depth of the bathymetry raster or
 the hypsograph.}
+
+\item{return_rast}{logical. If TRUE, return a raster with the calculated
+volume in each grid cell. Default is FALSE.}
 }
 \value{
 numeric. The volume of the lake in cubic meters.

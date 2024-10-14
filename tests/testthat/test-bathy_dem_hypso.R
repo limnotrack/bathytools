@@ -54,6 +54,9 @@ test_that("can generate hypsograph", {
   # Test less than 1% difference in surface area calculation
   testthat::expect_true(frac < 0.01)
 
+  vol_rast <- calculate_lake_volume(bathy_raster = bathy_raster,
+                                    return_rast = TRUE)
+  testthat::expect_s4_class(vol_rast, "SpatRaster")
   vol1 <- calculate_lake_volume(bathy_raster = bathy_raster)
   vol2 <- calculate_lake_volume(hyps = hyps)
   vd <- abs(vol1 - vol2)
