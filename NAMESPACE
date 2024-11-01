@@ -2,6 +2,7 @@
 
 export(bathy_to_hypso)
 export(calculate_lake_volume)
+export(estimate_bathymetry)
 export(generate_depth_points)
 export(get_contours)
 export(get_depths)

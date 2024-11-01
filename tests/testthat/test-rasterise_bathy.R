@@ -10,6 +10,16 @@ test_that("generate a bathymetry raster file", {
   testthat::expect_true(all(mm < 0))
 })
 
+test_that("estimate a bathymetry raster file using max depth", {
+  shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
+                                   package = "bathytools"))
+  max_depth <- 81.6
+  bathy <- estimate_bathymetry(shoreline = shoreline, max_depth = max_depth)
+  testthat::expect_s4_class(bathy, "SpatRaster")
+  mm <- terra::minmax(bathy)
+  testthat::expect_true(all(mm < 0))
+})
+
 test_that("generate contours from a bathymetry raster file", {
   shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
                                    package = "bathytools"))
