@@ -18,6 +18,15 @@ test_that("estimate a bathymetry raster file using max depth", {
   testthat::expect_s4_class(bathy, "SpatRaster")
   mm <- terra::minmax(bathy)
   testthat::expect_true(all(mm < 0))
+
+  point_data <- readRDS(system.file("extdata/depth_points.rds",
+                                    package = "bathytools"))
+  bathy_raster <- rasterise_bathy(shoreline = shoreline, point_data = point_data,
+                                  crs = 2193, res = 8)
+
+  bathy_diff <- calc_bathy_diff(obs = bathy_raster, pred = bathy)
+  testthat::expect_s4_class(bathy_diff, "SpatRaster")
+
 })
 
 test_that("generate contours from a bathymetry raster file", {
