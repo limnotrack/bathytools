@@ -114,7 +114,7 @@ plot_raster_3d <- function(x, fact = 0, cols = "topo", split_lake = FALSE,
     }
     # create a false lip around the lake
     bathy_agg[is.na(bathy_agg[])] <- max(terra::values(bathy_agg), na.rm = TRUE)
-    bathy_agg <- terra::mask(bathy_agg, sf::st_buffer(shoreline, buff),
+    bathy_agg <- terra::mask(bathy_agg, sf::st_buffer(shoreline, buff * 2),
                              touches = FALSE)
     bathy_mat <- bathy_agg |>
       terra::as.matrix(x = _, wide = TRUE)
