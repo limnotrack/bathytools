@@ -7,7 +7,7 @@
 get_shoreline(bathy_raster, dTolerance = NULL)
 }
 \arguments{
-\item{bathy_raster}{SpatRaster object with the bathymetry data.}
+\item{bathy_raster}{SpatRaster object with bathymetry depths (negative values).}
 
 \item{dTolerance}{numeric. The tolerance for simplifying the shoreline.
 Default is the maximum resolution of the bathymetric raster. If set to 0, the
