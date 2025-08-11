@@ -84,7 +84,7 @@ test_that("can merge bathy with DEM", {
 
   dem_bath <- merge_bathy_dem(shoreline = shoreline,
                               bathy_raster = bathy_raster,
-                              crop_dem_to_catchment = FALSE,
+                              crop_dem_to_catchment = TRUE,
                               dem_raster = dem_raster, catchment = catchment)
   testthat::expect_s4_class(dem_bath, "SpatRaster")
   lake_elev <- get_lake_surface_elevation(dem_raster = dem_raster,
@@ -99,4 +99,21 @@ test_that("can merge bathy with DEM", {
 
   t1 <- tm_dem_bath(dem_bath = dem_bath, lake_elev = lake_elev)
   testthat::expect_s3_class(t1, "tmap")
+  
+  lake_depth <- get_lake_depth(bathy_raster)
+  hyps <- bathy_to_hypso(bathy_raster = bathy_raster)
+  
+  hyps2 <- dem_to_hypsograph(shoreline = shoreline, dem_bath = dem_bath, 
+                             lake_elev = lake_elev, ext_elev = 3,
+                             lake_depth = lake_depth)
+  testthat::expect_true(is.data.frame(hyps2))
+  
+  v1 <- calculate_lake_volume(bathy_raster = bathy_raster)
+  v2 <- calculate_lake_volume(hyps = hyps, depth = lake_depth)
+  v3 <- calculate_lake_volume(hyps = hyps2, depth = lake_depth)
+  d1 <- v1 - v2
+  d2 <- v1 - v3
+  d3 <- v2 - v3
+  testthat::expect_true(abs(d1) / v1 < 0.01)
+  testthat::expect_true(abs(d2) / v1 < 0.01)
 })
