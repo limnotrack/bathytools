@@ -25,7 +25,9 @@ the hypsograph.}
 volume in each grid cell. Default is FALSE.}
 }
 \value{
-numeric. The volume of the lake in cubic meters.
+numeric. The volume of the lake in cubic meters (m^3).
+If \code{return_rast} is TRUE, a SpatRaster object with the volume
+in each grid cell is returned.
 }
 \description{
 Calculate the volume of a lake using bathymetry data or a hypsograph

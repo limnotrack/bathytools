@@ -7,7 +7,7 @@
 get_contours(bathy_raster, surface = 0, depths = 1)
 }
 \arguments{
-\item{bathy_raster}{SpatRaster object with the bathymetry data.}
+\item{bathy_raster}{SpatRaster object with bathymetry depths (negative values).}
 
 \item{surface}{numeric. The surface elevation of the lake. Default is 0.}
 
