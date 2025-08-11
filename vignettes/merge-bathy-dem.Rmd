@@ -46,7 +46,7 @@ Here we plot the lake shoreline in light blue and the lake catchment in pink.
 
 ```{r plot-shoreline}
 tmap_mode("view")
-tmap_options(basemaps = "Esri.WorldImagery")
+tmap_options(basemap.server = "Esri.WorldImagery")
 
 tm_shape(shoreline) +
   tm_borders(col = "#8DA0CB", lwd = 2) +
@@ -70,7 +70,7 @@ head(point_data)
 dem_raster <- terra::rast(system.file("extdata/dem_32m.tif",
                                       package = "bathytools"))
 tm_shape(dem_raster) +
-  tm_raster(alpha = 0.5, style = "cont", palette = "-YlGnBu") +
+  tm_raster(col_alpha = 0.5, col.scale = tm_scale_continuous(values = "-brewer.yl_gn_bu")) +
   tm_shape(shoreline) +
   tm_borders(col = "#FC8D62", lwd = 2) +
   tm_shape(catchment) +
@@ -91,9 +91,10 @@ bathy_raster <- rasterise_bathy(shoreline = shoreline,
 
 ```{r plot-bathy}
 tm_shape(dem_raster) +
-  tm_raster(alpha = 0.5, style = "cont", palette = "-YlGnBu") +
+  tm_raster(col_alpha = 0.5, 
+            col.scale = tm_scale_continuous(values = "-brewer.yl_gn_bu")) +
   tm_shape(bathy_raster) +
-  tm_raster(style = "cont", palette = "-viridis", breaks = seq(-90, 0, by = 10)) +
+  tm_raster(col.scale = tm_scale_continuous(values = "-viridis", ticks = seq(-90, 0, by = 10))) +
   tm_shape(shoreline) +
   tm_borders(col = "#FC8D62", lwd = 2) +
   tm_shape(catchment) +
@@ -121,7 +122,8 @@ Here we plot the merged raster with the lake and catchment boundaries.
 
 ```{r plot-merged}
 tm_shape(dem_bath) +
-  tm_raster(alpha = 0.5, style = "cont", palette = "-YlGnBu") +
+  tm_raster(col_alpha = 0.5, 
+            col.scale = tm_scale_continuous(values = "-brewer.yl_gn_bu")) +
   tm_shape(shoreline) +
   tm_borders(col = "#FC8D62", lwd = 2) +
   tm_shape(catchment) +
@@ -164,6 +166,39 @@ ggplot(hyps, aes(x = area, y = depth)) +
   theme_bw()
 
 ```
+
+
+### Extended hypsograph of the merged raster
+
+When merging bathymetry with DEM data, it is often useful to extend the hypsograph to include the area of the lake at different elevations above the lake surface. This can be done by specifying an additional elevation to extend the lake surface. The `dem_to_hypso()` function can take an additional argument `ext_elev` to specify this elevation. It also
+requires the merged raster and the lake surface elevation as inputs, the lake shoreline polygon, and the lake elevation.
+
+Here we will extend the hypsograph by 3 meters above the lake surface elevation. This will allow us to see the area of the lake at different elevations above the lake surface.
+
+```{r ext-hypsograph}
+
+lake_depth <- get_lake_depth(bathy_raster = bathy_raster)
+ext_hyps <- dem_to_hypsograph(shoreline = shoreline, dem_bath = dem_bath, 
+                          lake_elev = lake_elev, lake_depth = lake_depth,
+                          ext_elev = 3)
+head(ext_hyps)
+```
+
+The extended hypsograph can be plotted to show the area of the lake at different
+depths or elevations. Here we will plot the area of the lake at different 
+elevations above the lake surface.
+
+```{r plot-ext-hypsograph}
+
+ggplot(ext_hyps, aes(x = area, y = elev)) +
+  geom_hline(yintercept = lake_elev, linetype = "dashed", color = "red") +
+  geom_line() +
+  geom_point() +
+  labs(x = "Area (m^2)", y = "Elevation (m.a.s.l)") +
+  theme_bw()
+
+```
+
 
 ### 3-D plot of the merged raster
 
