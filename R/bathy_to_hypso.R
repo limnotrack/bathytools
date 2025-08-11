@@ -43,6 +43,8 @@ bathy_to_hypso <- function(bathy_raster, surface = 0, depths = 1) {
     sum(terra::values(bathy_raster) <= d, na.rm = TRUE) * res[1] * res[2]
   })
   df <- data.frame(depth = depth_out, area = areas) |>
-    dplyr::arrange(desc(depth))
+    dplyr::mutate(elev = depth) |> 
+    dplyr::arrange(desc(depth)) |> 
+    dplyr::select(elev, depth, area)
   return(df)
 }
