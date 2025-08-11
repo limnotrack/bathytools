@@ -29,12 +29,14 @@ estimate_bathymetry <- function(shoreline, max_depth, res = 10) {
   lake_vect <- terra::vect(shoreline)
   lake_extent <- terra::ext(lake_vect)
   # Create a blank raster based on the extent and resolution
-  distance_raster <- terra::rast(ext = lake_extent, resolution = res, crs = terra::crs(lake_vect))
+  distance_raster <- terra::rast(ext = lake_extent, resolution = res,
+                                 crs = terra::crs(lake_vect))
   terra::values(distance_raster) <- 1
 
   # Rasterize the lake polygon
   # Assign a value of 1 to the lake polygon area
-  lake_mask <- terra::mask(distance_raster, lake_vect, updatevalue = NA, inverse = TRUE)
+  lake_mask <- terra::mask(distance_raster, lake_vect, updatevalue = NA,
+                           inverse = TRUE)
 
   # Calculate the distance from the lake polygon
   # Distance will be measured in the same units as the coordinate system of the lake_polygon
