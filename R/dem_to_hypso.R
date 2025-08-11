@@ -81,7 +81,7 @@ dem_to_hypsograph <- function(shoreline = NULL, dem_bath, lake_elev = NULL,
   )
   hyps$depth <- -round(lake_elev - hyps$elev, 3)
   hyps <- dplyr::arrange(hyps, dplyr::desc(elev))
-  plot(hyps$area, hyps$elev, main = "Hypsograph Below Lake Surface")
+  # plot(hyps$area, hyps$elev, main = "Hypsograph Below Lake Surface")
   
   # Optional extension above lake surface
   if (ext_elev > 0) {
@@ -91,8 +91,10 @@ dem_to_hypsograph <- function(shoreline = NULL, dem_bath, lake_elev = NULL,
       top_elev <- mm[2]
     }
     
-    poly_max <- extract_ext_elev_polygon(dem_bath, lake_elev, ext_elev,
-                                         shoreline)
+    poly_max <- extract_ext_elev_polygon(dem_bath = dem_bath, 
+                                         lake_elev = lake_elev, 
+                                         ext_elev = ext_elev, 
+                                         shoreline = shoreline)
     out_lake_ext <- terra::mask(dem_bath, poly_max)
     terra::plot(out_lake_ext, main = "Extended Lake Area")
     
@@ -107,15 +109,15 @@ dem_to_hypsograph <- function(shoreline = NULL, dem_bath, lake_elev = NULL,
                                                 na.rm = TRUE) * cell_area),
       depth = ext_depths - lake_elev
     )
-    plot(hyps$area, hyps$elev, main = "Hypsograph Below Lake Surface")
-    points(ext_hyps$area, ext_hyps$elev, col = "red", pch = 19)
-    # ext_hyps$depth <- round(lake_elev - ext_hyps$elev, 3)
-    
-    hyps <- dplyr::bind_rows(hyps, ext_hyps) |> 
+    # plot(hyps$area, hyps$elev, main = "Hypsograph Below Lake Surface")
+    # points(ext_hyps$area, ext_hyps$elev, col = "red", pch = 19)
+    # # ext_hyps$depth <- round(lake_elev - ext_hyps$elev, 3)
+    # 
+    hyps <- dplyr::bind_rows(hyps, ext_hyps) |>
       dplyr::arrange(dplyr::desc(elev)) |>
       dplyr::select(elev, depth, area)
-    plot(hyps$area, hyps$elev, main = "Hypsograph with Extension")
-    abline(h = lake_elev, col = "red", lwd = 2)
+    # plot(hyps$area, hyps$elev, main = "Hypsograph with Extension")
+    # abline(h = lake_elev, col = "red", lwd = 2)
   }
   
   return(hyps)
