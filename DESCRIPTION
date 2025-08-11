@@ -26,3 +26,6 @@ Suggests:
 Config/testthat/edition: 3
 URL: https://limnotrack.github.io/bathytools/
 VignetteBuilder: knitr
+Depends: 
+    R (>= 3.5)
+LazyData: true
