@@ -47,9 +47,27 @@ generate_depth_points <- function(shoreline, islands = NULL, point_data = NULL,
     crs <- sf::st_crs(shoreline)
   }
 
+  island_points <- list()
   if (!is.null(islands)) {
-    # Add handler for islands
+    
+    island_points <- lapply(1:nrow(islands), function(i) {
 
+      sel_cont <- islands[i, ]
+      lstring <- sel_cont$geometry |>
+        sf::st_cast("MULTILINESTRING") |>
+        sf::st_cast("LINESTRING") |>
+        sf::st_as_sf()
+
+      p <- line_to_points(lstring$x, res) |>
+        # sf::st_cast("POINT") |>
+        sf::st_as_sf() |>
+        dplyr::mutate(depth = 0) |>
+        dplyr::rename(geometry = x)
+      p <- p[!sf::st_is_empty(p$geometry), ] |>
+        sf::st_cast("POINT")
+      return(p)
+    }) |> 
+      dplyr::bind_rows()
   }
 
   # If shoreline CRS is not equal to crs then transform
@@ -334,7 +352,7 @@ generate_depth_points <- function(shoreline, islands = NULL, point_data = NULL,
     dplyr::filter(idx)
 
   # Combine in-lake point_data & outline
-  all <- dplyr::bind_rows(pnt_outline, pnt_inset, sub) |>
+  all <- dplyr::bind_rows(pnt_outline, pnt_inset, sub, island_points) |>
     dplyr::mutate(depth = depth)
 
 
