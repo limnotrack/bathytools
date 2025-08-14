@@ -3,7 +3,7 @@ pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   merge-bathy-dem: merge-bathy-dem.html
-last_built: 2025-08-11T23:23Z
+last_built: 2025-08-14T03:12Z
 urls:
   reference: https://limnotrack.github.io/bathytools/reference
   article: https://limnotrack.github.io/bathytools/articles
