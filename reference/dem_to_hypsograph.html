@@ -80,21 +80,25 @@ the function will calculate the lake surface elevation from the DEM.</p></dd>
 <dt id="arg-depths">depths<a class="anchor" aria-label="anchor" href="#arg-depths"></a></dt>
 <dd><p>numeric. The depths at which to calculate the area. If a single
 numeric value is provided, the function will calculate the area at each depth
-from the lake surface to the minimum depth of the bathymetry raster at intervals of
+from the surface to the minimum depth of the bathymetry raster at intervals of
 the provided value. If a vector of numeric values is provided, the function
-will calculate the area at each depth specified in the vector. Default is NULL,
-which will calculate depths at intervals based on the lake depth.</p></dd>
+will calculate the area at each depth specified in the vector. if <code>NULL</code>, the
+function will use the default depths from the model layer structure. Default
+is <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-ext-elev">ext_elev<a class="anchor" aria-label="anchor" href="#arg-ext-elev"></a></dt>
 <dd><p>numeric. The elevation above the lake surface to extend the
-hypsograph. Default is 0, which means no extension.
-#' @return data.frame with columns 'elev', 'area', and 'depth'. The 'elev'
-column contains the elevation, the 'area' column contains the area of the
-lake at that elevation, and the 'depth' column contains the depth of the lake
-at that elevation.</p></dd>
+hypsograph. Default is 0, which means no extension.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>data.frame with columns 'elev', 'area', and 'depth'. The 'elev'
+column contains the elevation, the 'area' column contains the area of the
+lake at that elevation, and the 'depth' column contains the depth of the lake
+at that elevation.</p>
+    </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

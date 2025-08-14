@@ -50,7 +50,7 @@ depth and area at each depth.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bathy_to_hypso</span><span class="op">(</span><span class="va">bathy_raster</span>, surface <span class="op">=</span> <span class="fl">0</span>, depths <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bathy_to_hypso</span><span class="op">(</span><span class="va">bathy_raster</span>, surface <span class="op">=</span> <span class="fl">0</span>, depths <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -70,7 +70,9 @@ depth and area at each depth.</p>
 numeric value is provided, the function will calculate the area at each depth
 from the surface to the minimum depth of the bathymetry raster at intervals of
 the provided value. If a vector of numeric values is provided, the function
-will calculate the area at each depth specified in the vector. Default is 1.</p></dd>
+will calculate the area at each depth specified in the vector. if <code>NULL</code>, the
+function will use the default depths from the model layer structure. Default
+is <code>NULL</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -86,11 +88,11 @@ will calculate the area at each depth specified in the vector. Default is 1.</p>
 <span class="r-in"><span>package <span class="op">=</span> <span class="st">"bathytools"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">bathy_raster</span> <span class="op">&lt;-</span> <span class="fu"><a href="rasterise_bathy.html">rasterise_bathy</a></span><span class="op">(</span>shoreline <span class="op">=</span> <span class="va">shoreline</span>,</span></span>
 <span class="r-in"><span>point_data <span class="op">=</span> <span class="va">point_data</span>, crs <span class="op">=</span> <span class="fl">2193</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Generating depth points... [2025-08-14 03:12:31]</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Finished! [2025-08-14 03:12:32]</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Interpolating to raster... [2025-08-14 03:12:32]</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Generating depth points... [2025-08-14 03:27:26]</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Finished! [2025-08-14 03:27:26]</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Interpolating to raster... [2025-08-14 03:27:26]</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Adjusting depths &gt;= 0 to  -0.82 m</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Finished! [2025-08-14 03:12:55]</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Finished! [2025-08-14 03:27:50]</span>
 <span class="r-plt img"><img src="bathy_to_hypso-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">hyps</span> <span class="op">&lt;-</span> <span class="fu">bathy_to_hypso</span><span class="op">(</span>bathy_raster <span class="op">=</span> <span class="va">bathy_raster</span><span class="op">)</span></span></span>
 </code></pre></div>
