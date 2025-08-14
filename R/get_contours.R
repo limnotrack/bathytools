@@ -17,7 +17,7 @@
 #' bathy_raster <- rasterise_bathy(shoreline = shoreline,
 #' point_data = point_data, crs = 2193, res = 8)
 #' contours <- get_contours(bathy_raster = bathy_raster)
-get_contours <- function(bathy_raster, surface = 0, depths = 1) {
+get_contours <- function(bathy_raster, surface = 0, depths = NULL) {
 
   # Get depths
   depth_out <- get_depths(bathy_raster, surface, depths)

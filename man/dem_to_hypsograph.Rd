@@ -23,17 +23,20 @@ the function will calculate the lake surface elevation from the DEM.}
 
 \item{depths}{numeric. The depths at which to calculate the area. If a single
 numeric value is provided, the function will calculate the area at each depth
-from the lake surface to the minimum depth of the bathymetry raster at intervals of
+from the surface to the minimum depth of the bathymetry raster at intervals of
 the provided value. If a vector of numeric values is provided, the function
-will calculate the area at each depth specified in the vector. Default is NULL,
-which will calculate depths at intervals based on the lake depth.}
+will calculate the area at each depth specified in the vector. if \code{NULL}, the
+function will use the default depths from the model layer structure. Default
+is \code{NULL}.}
 
 \item{ext_elev}{numeric. The elevation above the lake surface to extend the
-hypsograph. Default is 0, which means no extension.
-#' @return data.frame with columns 'elev', 'area', and 'depth'. The 'elev'
+hypsograph. Default is 0, which means no extension.}
+}
+\value{
+data.frame with columns 'elev', 'area', and 'depth'. The 'elev'
 column contains the elevation, the 'area' column contains the area of the
 lake at that elevation, and the 'depth' column contains the depth of the lake
-at that elevation.}
+at that elevation.
 }
 \description{
 This function calculates a hypsograph from a bathymetry merged

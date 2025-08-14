@@ -3,19 +3,15 @@
 #'  with a DEM, optionally extending it.
 #' to include an area above the lake surface. It can also calculate the area of
 #' the lake at different depths, and optionally mask the DEM to a shoreline.
+#' @inheritParams merge_bathy_dem
+#' @inheritParams get_depths
 #' @param shoreline sf object. The shoreline polygon to mask the DEM to.
 #' @param dem_bath SpatRaster object. The DEM with bathymetry data.
 #' @param lake_elev numeric. The elevation of the lake surface. If NULL,
 #' the function will calculate the lake surface elevation from the DEM.
-#' @param depths numeric. The depths at which to calculate the area. If a single
-#' numeric value is provided, the function will calculate the area at each depth
-#' from the lake surface to the minimum depth of the bathymetry raster at intervals of
-#' the provided value. If a vector of numeric values is provided, the function
-#' will calculate the area at each depth specified in the vector. Default is NULL,
-#' which will calculate depths at intervals based on the lake depth.
 #' @param ext_elev numeric. The elevation above the lake surface to extend the
 #' hypsograph. Default is 0, which means no extension.
-#' #' @return data.frame with columns 'elev', 'area', and 'depth'. The 'elev'
+#' @return data.frame with columns 'elev', 'area', and 'depth'. The 'elev'
 #' column contains the elevation, the 'area' column contains the area of the
 #' lake at that elevation, and the 'depth' column contains the depth of the lake
 #' at that elevation.

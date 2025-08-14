@@ -12,11 +12,13 @@
 #' numeric value is provided, the function will calculate the area at each depth
 #' from the surface to the minimum depth of the bathymetry raster at intervals of
 #' the provided value. If a vector of numeric values is provided, the function
-#' will calculate the area at each depth specified in the vector. Default is 1.
+#' will calculate the area at each depth specified in the vector. if `NULL`, the 
+#' function will use the default depths from the model layer structure. Default
+#' is `NULL`.
 #' @return numeric
 #' @export
 #' @importFrom terra minmax
-get_depths <- function(bathy_raster, surface = 0, depths) {
+get_depths <- function(bathy_raster, surface = 0, depths = NULL) {
 
   if (!is(bathy_raster, "SpatRaster")) {
     stop("bathy_raster must be a SpatRaster object")
@@ -25,7 +27,7 @@ get_depths <- function(bathy_raster, surface = 0, depths) {
   # Get min/max of bathy object
   mm <- terra::minmax(bathy_raster)
 
-  if (missing(depths)) {
+  if (is.null(depths)) {
     depth_out <- model_layer_structure |> 
       dplyr::mutate(depths = surface + zi) |> 
       dplyr::filter(depths < abs(mm[1]), zi > 0) |> 

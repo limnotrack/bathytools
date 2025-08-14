@@ -4,7 +4,7 @@
 \alias{get_contours}
 \title{Get contours from a bathymetric raster}
 \usage{
-get_contours(bathy_raster, surface = 0, depths = 1)
+get_contours(bathy_raster, surface = 0, depths = NULL)
 }
 \arguments{
 \item{bathy_raster}{SpatRaster object with bathymetry depths (negative values).}
@@ -15,7 +15,9 @@ get_contours(bathy_raster, surface = 0, depths = 1)
 numeric value is provided, the function will calculate the area at each depth
 from the surface to the minimum depth of the bathymetry raster at intervals of
 the provided value. If a vector of numeric values is provided, the function
-will calculate the area at each depth specified in the vector. Default is 1.}
+will calculate the area at each depth specified in the vector. if \code{NULL}, the
+function will use the default depths from the model layer structure. Default
+is \code{NULL}.}
 }
 \value{
 sf LINESTRING of the contours.
