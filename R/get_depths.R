@@ -23,6 +23,9 @@ get_depths <- function(bathy_raster, surface = 0, depths = NULL) {
   if (!is(bathy_raster, "SpatRaster")) {
     stop("bathy_raster must be a SpatRaster object")
   }
+  
+  utils::data("model_layer_structure", package = "bathytools", 
+              envir = environment())
 
   # Get min/max of bathy object
   mm <- terra::minmax(bathy_raster)

@@ -26,6 +26,9 @@ dem_to_hypsograph <- function(shoreline = NULL, dem_bath, lake_elev = NULL,
                               lake_depth = NULL, 
                               depths = NULL, ext_elev = 0) {
   
+  utils::data("model_layer_structure", package = "bathytools", 
+              envir = environment())
+  
   # Mask to shoreline if provided
   if (!is.null(shoreline)) {
     in_lake <- terra::mask(dem_bath, shoreline)
