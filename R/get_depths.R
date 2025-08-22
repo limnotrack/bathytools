@@ -29,27 +29,32 @@ get_depths <- function(bathy_raster, surface = 0, depths = NULL) {
 
   # Get min/max of bathy object
   mm <- terra::minmax(bathy_raster)
+  z_max <- abs(mm[1])
+  z_min <- abs(mm[2])
 
   if (is.null(depths)) {
     depth_out <- model_layer_structure |> 
       dplyr::mutate(depths = surface + zi) |> 
       dplyr::filter(depths < abs(mm[1]), zi > 0) |> 
       dplyr::pull(depths)
-    if (!abs(mm[1]) %in% depth_out) {
-      depth_out <- c(depth_out, abs(mm[1]))
-    }
+    # if (!abs(mm[1]) %in% depth_out) {
+    #   depth_out <- c(depth_out, abs(mm[1]))
+    # }
   } else {
     if (length(depths) == 1) {
       depth_out <- seq(from = surface, to = mm[1], by = -depths)
     } else if (length(depths) > 1) {
       depth_out <- depths
     }
-    if (!mm[1] %in% depth_out) {
-      depth_out <- c(depth_out, mm[1])
-    }
+    # if (!mm[1] %in% depth_out) {
+    #   depth_out <- c(depth_out, mm[1])
+    # }
   } 
-
+  depth_out <- c(surface, depth_out, z_max)
   # Round depth_out to 2 decimal
   depth_out <- round(depth_out, 2)
+  # Remove duplicates
+  depth_out <- unique(depth_out)
+
   return(depth_out)
 }
