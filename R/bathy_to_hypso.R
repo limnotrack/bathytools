@@ -28,9 +28,15 @@ bathy_to_hypso <- function(bathy_raster, surface = 0, depths = NULL) {
   # Get depths
   depth_out <- get_depths(bathy_raster, surface, depths)
 
-
   # Get resolution of bathy object
   res <- terra::res(bathy_raster)
+  
+  mm <- terra::minmax(bathy_raster)
+  # If minimum depth is less than 0, then we need to adjust the output depths to
+  # negative
+  if (mm[2] < 0) {
+    depth_out <- -depth_out
+  }
 
   # Calculate areas of each depth
   areas <- rep(NA, length(depth_out))
@@ -41,5 +47,6 @@ bathy_to_hypso <- function(bathy_raster, surface = 0, depths = NULL) {
     dplyr::mutate(elev = depth) |> 
     dplyr::arrange(desc(depth)) |> 
     dplyr::select(elev, depth, area)
+  # plot(df$area, df$depth)
   return(df)
 }
