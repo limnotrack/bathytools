@@ -69,13 +69,6 @@
 <dd><p>sf object of lake islands if present.</p></dd>
 
 
-<dt id="arg-point-data">point_data<a class="anchor" aria-label="anchor" href="#arg-point-data"></a></dt>
-<dd><p>sf object of depth points or a dataframe of points with
-columns 'lon' and 'lat'. Must contain a "depth" column. If NULL, then
-contours must be provided.
-If NULL, then contours must be provided.</p></dd>
-
-
 <dt id="arg-contours">contours<a class="anchor" aria-label="anchor" href="#arg-contours"></a></dt>
 <dd><p>sf object of depth contours. If NULL, then points must be
 provided.</p></dd>
@@ -134,12 +127,13 @@ provided.</p></dd>
 <span class="r-in"><span>package <span class="op">=</span> <span class="st">"bathytools"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">bathy</span> <span class="op">&lt;-</span> <span class="fu">rasterise_bathy</span><span class="op">(</span>shoreline <span class="op">=</span> <span class="va">shoreline</span>, point_data <span class="op">=</span> <span class="va">point_data</span>,</span></span>
 <span class="r-in"><span>crs <span class="op">=</span> <span class="fl">2193</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Generating depth points... [2025-08-18 04:01:14]</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Finished! [2025-08-18 04:01:14]</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Interpolating to raster... [2025-08-18 04:01:14]</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Adjusting depths &gt;= 0 to  -0.82 m</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Finished! [2025-08-18 04:01:40]</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Generating depth points... [2025-08-22 04:42:08]</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Finished! [2025-08-22 04:42:08]</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Interpolating to raster... [2025-08-22 04:42:08]</span>
 <span class="r-plt img"><img src="rasterise_bathy-1.png" alt="" width="700" height="433"></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Adjusting depths &gt;= 0 to  -0.82 m</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Finished! [2025-08-22 04:42:21]</span>
+<span class="r-plt img"><img src="rasterise_bathy-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
