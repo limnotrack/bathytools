@@ -24,11 +24,6 @@ rasterise_bathy(
 
 \item{islands}{sf object of lake islands if present.}
 
-\item{point_data}{sf object of depth points or a dataframe of points with
-columns 'lon' and 'lat'. Must contain a "depth" column. If NULL, then
-contours must be provided.
-If NULL, then contours must be provided.}
-
 \item{contours}{sf object of depth contours. If NULL, then points must be
 provided.}
 

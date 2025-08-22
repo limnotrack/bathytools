@@ -23,11 +23,14 @@ rasterise_bathy <- function(shoreline, islands = NULL, point_data = NULL,
                             crs, method = "MBA", print_plot = TRUE,
                             n = 1, m = 1, h = 8) {
 
-  all <- generate_depth_points(shoreline = shoreline, islands = islands,
-                               point_data = point_data, contours = contours,
-                               res = res, subsample = subsample, crs = crs)
+  depth_points <- generate_depth_points(shoreline = shoreline, 
+                                        islands = islands,
+                                        depth_points = point_data, 
+                                        contours = contours, res = res,
+                                        subsample = subsample, crs = crs)
 
-  bathy <- interpolate_points(point_data = all, shoreline = shoreline,
+  bathy <- interpolate_points(depth_points = depth_points, 
+                              shoreline = shoreline, islands = islands,
                               res = res, method = method, n = n, m = m, h = h,
                               crs = crs, print_plot = print_plot)
   return(bathy)
