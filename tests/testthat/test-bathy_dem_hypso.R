@@ -20,7 +20,8 @@ test_that("can merge bathy with DEM", {
   dem_raster <- terra::rast(system.file("extdata/dem_32m.tif",
                                         package = "bathytools"))
   dem_bath <- merge_bathy_dem(shoreline = shoreline,
-                              bathy_raster = bathy_raster, crop_dem_to_catchment = F,
+                              bathy_raster = bathy_raster, 
+                              crop_dem_to_catchment = FALSE,
                               dem_raster = dem_raster, catchment = catchment)
   testthat::expect_s4_class(dem_bath, "SpatRaster")
 
@@ -39,7 +40,7 @@ test_that("can generate hypsograph", {
                                    package = "bathytools"))
   point_data <- readRDS(system.file("extdata/depth_points.rds",
                                     package = "bathytools"))
-  bathy_raster <- rasterise_bathy(shoreline = shoreline,
+  bathy_raster <- rasterise_bathy(shoreline = shoreline, 
                                   point_data = point_data, crs = 2193)
 
   hyps <- bathy_to_hypso(bathy_raster = bathy_raster)
@@ -73,6 +74,8 @@ test_that("can merge bathy with DEM", {
                                     package = "bathytools"))
   bathy_raster <- rasterise_bathy(shoreline = shoreline,
                                   point_data = point_data, crs = 2193)
+  
+  hyps1 <- bathy_to_hypso(bathy_raster = bathy_raster)
 
   p1 <- plot_raster_3d(x = bathy_raster, shoreline = shoreline, fact = 8)
   testthat::expect_s3_class(p1, "plotly")
@@ -107,6 +110,7 @@ test_that("can merge bathy with DEM", {
                              lake_elev = lake_elev, ext_elev = 3,
                              lake_depth = lake_depth)
   testthat::expect_true(is.data.frame(hyps2))
+  testthat::expect_true(max(hyps2$depth) > 0 & min(hyps2$depth) < 0)
   
   v1 <- calculate_lake_volume(bathy_raster = bathy_raster)
   v2 <- calculate_lake_volume(hyps = hyps, depth = lake_depth)
