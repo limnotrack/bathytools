@@ -99,7 +99,7 @@ dem_to_hypsograph <- function(shoreline = NULL, dem_bath, lake_elev = NULL,
     
     ext_depths <- model_layer_structure |> 
       dplyr::mutate(depths = lake_elev + zi) |> 
-      dplyr::filter(depths < top_elev, zi > 0) |> 
+      dplyr::filter(depths <= top_elev, zi > 0) |> 
       dplyr::pull(depths)
     
     ext_hyps <- data.frame(
