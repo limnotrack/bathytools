@@ -5,11 +5,12 @@
 \title{Interpolate point depth data to a raster}
 \usage{
 interpolate_points(
-  point_data,
+  depth_points,
   shoreline,
+  islands = NULL,
   crs,
   res = 2,
-  method = "MBA",
+  method = "nn",
   n = 1,
   m = 1,
   h = 8,
@@ -17,12 +18,14 @@ interpolate_points(
 )
 }
 \arguments{
-\item{point_data}{sf object of depth points or a dataframe of points with
+\item{depth_points}{sf object of depth points or a dataframe of points with
 columns 'lon' and 'lat'. Must contain a "depth" column. If NULL, then
 contours must be provided.
 If NULL, then contours must be provided.}
 
 \item{shoreline}{sf object of lake shoreline.}
+
+\item{islands}{sf object of lake islands if present.}
 
 \item{crs}{target coordinate reference system: object of class \code{crs}, or input string for \link[sf]{st_crs}}
 
@@ -54,12 +57,12 @@ Interpolate point depth data to a raster
 }
 \examples{
 shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
-package = "bathytools"))
-point_data <- readRDS(system.file("extdata/depth_points.rds",
-                                  package = "bathytools"))
+package = "bathy_rastertools"))
+depth_points <- readRDS(system.file("extdata/depth_points.rds",
+                                  package = "bathy_rastertools"))
 depth_points <- generate_depth_points(shoreline = shoreline,
-point_data = point_data)
-bathy <- interpolate_points(point_data = depth_points, shoreline = shoreline,
+depth_points = depth_points)
+bathy_raster <- interpolate_points(depth_points = depth_points, shoreline = shoreline,
 crs = 2193)
 
 }
