@@ -2,7 +2,7 @@
 #'
 #' @param shoreline sf object of lake shoreline.
 #' @param islands sf object of lake islands if present.
-#' @param point_data sf object of depth points or a dataframe of points with
+#' @param depth_points sf object of depth points or a dataframe of points with
 #' columns 'lon' and 'lat'. Must contain a "depth" column. If NULL, then
 #' contours must be provided.
 #' If NULL, then contours must be provided.
@@ -23,12 +23,12 @@
 #' @examples
 #' shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
 #' package = "bathytools"))
-#' point_data <- readRDS(system.file("extdata/depth_points.rds",
+#' depth_points <- readRDS(system.file("extdata/depth_points.rds",
 #' package = "bathytools"))
 #'
 #' # Generate depth points with points ----
 #' depth_points <- generate_depth_points(shoreline = shoreline,
-#' point_data = point_data)
+#' depth_points = depth_points)
 #'
 #' # Generate depth points with contours ----
 #' contours <- readRDS(system.file("extdata/depth_contours.rds",
@@ -37,7 +37,7 @@
 #' contours = contours)
 #'
 
-generate_depth_points <- function(shoreline, islands = NULL, point_data = NULL,
+generate_depth_points <- function(shoreline, islands = NULL, depth_points = NULL,
                                   contours = NULL, res = 2, subsample = TRUE,
                                   crs = NULL) {
 
@@ -89,8 +89,6 @@ generate_depth_points <- function(shoreline, islands = NULL, point_data = NULL,
     shoreline_poly <- shoreline |>
       sf::st_cast("POLYGON")
   }
-
-
 
   # Calculate lake perimeter for shoreline ----
   perim <- shoreline_line |>
@@ -170,138 +168,46 @@ generate_depth_points <- function(shoreline, islands = NULL, point_data = NULL,
       p <- p[!sf::st_is_empty(p$geometry), ] |>
         sf::st_cast("POINT")
       return(p)
-
-
-      # tm_shape(sel_cont) +
-      #   tm_lines(col = "depth", lwd = 1, style = "cont")
-      # sel_cont |>
-      #   sf::st_as_sfc() |>
-      #   sf::st_line_sample(n = 10, type = "regular")
-      # mlstring <- sel_cont$geometry |>
-      #   sf::st_cast("MULTILINESTRING")
-      # perim <- mlstring |>
-      #   sf::st_length() |>
-      #   units::set_units("m") |>
-      #   units::drop_units()
-      #
-      # lstring <- mlstring |>
-      #   sf::st_cast("LINESTRING") |>
-      #   sf::st_as_sf() |>
-      #   dplyr::mutate(length = units::drop_units(sf::st_length(x)),
-      #                 np = ceiling(length / res),
-      #                 id = dplyr::row_number())
-      #
-      # p <- lstring |>
-      #   dplyr::group_by(id) |>
-      #   dplyr::summarise(l = line2p(x, res))
-      #   # sf::st_line_sample(n = np, type = "regular")
-      #   dplyr::mutate(p = line2p(x, res))
-      # tm_shape(p) +
-      #   tm_dots()
-      #
-      #
-      #
-      # # np <- round((perim / res) / length(lstring))
-      # out <- lapply(1:nrow(lstring), \(i) {
-      #   lstring[i, ] |>
-      #     sf::st_line_sample(n = lstring$np[i], type = "regular") |>
-      #     sf::st_cast("POINT") |>
-      #     sf::st_as_sf()
-      # }) |>
-      #   dplyr::bind_rows()
-      #
-      # p <- lstring |>
-      #   sf::st_line_sample(n = np, type = "regular") |>
-      #   sf::st_cast("POINT") |>
-      #   sf::st_as_sf()
-      #
-      #
-      # p <- lapply(1:length(lstring), \(i) {
-      #   lgth <- units::drop_units(sf::st_length(lstring[i, ]))
-      #   np2 <- ceiling(lgth / res)
-      #
-      #   lstring[i, ] |>
-      #     sf::st_line_sample(n = np2, type = "regular") |>
-      #     sf::st_cast("POINT")
-      # })
-      # p <- sel_cont |>
-      #   sf::st_cast("MULTILINESTRING") |>
-      #   sf::st_cast("LINESTRING") |>
-      #   sf::st_line_sample(n = np, type = "regular") |>
-      #   sf::st_as_sf()
-      # tm_shape(p[1, ]) +
-      #   tm_dots()
-      #
-      # p <- contours |>
-      #   dplyr::filter(depth == d) |>
-      #   sf::st_cast("MULTILINESTRING") |>
-      #   sf::st_cast("LINESTRING") |>
-      #   sf::st_line_sample(n = 10, type = "regular") |>
-      #   # sf::st_sample(np, type = "regular") |>
-      #   sf::st_as_sf() |>
-      #   sf::st_cast("POINT") |>
-      #   dplyr::mutate(depth = d) |>
-      #   dplyr::rename(geometry = x)
-      #
-      # line_string <- contours |>
-      #   dplyr::filter(depth == d) |>
-      #   sf::st_cast("MULTILINESTRING") |>
-      #   sf::st_cast("LINESTRING")
-      #
-      # p <- lapply(1:nrow(line_string), \(i) {
-      #   lgth <- units::drop_units(sf::st_length(line_string[i, ]))
-      #   np <- ceiling(lgth / res)
-      #
-      #   line_string[i, ] |>
-      #     sf::st_line_sample(n = np, type = "regular") |>
-      #     # sf::st_sample(np, type = "regular") |>
-      #     sf::st_as_sf() |>
-      #     sf::st_cast("POINT") |>
-      #     dplyr::mutate(depth = d) |>
-      #     dplyr::rename(geometry = x)
-      # }) |>
-      #   dplyr::bind_rows()
-      # p
     }) |>
       dplyr::bind_rows() |>
       sf::st_as_sf() |>
       dplyr::select(depth, geometry)
     # tm_shape(cont_pnts) +
-    #   tm_dots()
+    #   tm_dots(fill = "depth")
   }
 
-  # If point_data dataframe is provided, convert to sf object
-  if (!is.null(point_data)) {
+  # If depth_points dataframe is provided, convert to sf object
+  if (!is.null(depth_points)) {
 
-    if (!"depth" %in% names(point_data)) {
-      stop("point_data must have a column named 'depth'")
+    if (!"depth" %in% names(depth_points)) {
+      stop("depth_points must have a column named 'depth'")
     }
-    if (any(point_data$depth > 0)) {
+    if (any(depth_points$depth > 0)) {
       stop("Point depths must be less than or equal to 0")
     }
 
-    # If point_data are a dataframe, convert to sf object
-    if (is(point_data, "sf")) {
-      pts <- point_data |>
+    # If depth_points are a dataframe, convert to sf object
+    if (is(depth_points, "sf")) {
+      pts <- depth_points |>
         dplyr::select(depth, geometry)
-    } else if (is.data.frame(point_data)) {
-      if (!all(c("lon", "lat", "depth") %in% names(point_data))) {
-        stop("point_data must have columns 'lon', 'lat', and 'depth'")
+    } else if (is.data.frame(depth_points)) {
+      if (!all(c("lon", "lat", "depth") %in% names(depth_points))) {
+        stop("depth_points must have columns 'lon', 'lat', and 'depth'")
       }
-      pts <- sf::st_as_sf(point_data, coords = c("lon", "lat"),
+      pts <- sf::st_as_sf(depth_points, coords = c("lon", "lat"),
                           crs = 4326) |>
-        dplyr::mutate(depth = point_data$depth) |>
+        dplyr::mutate(depth = depth_points$depth) |>
         dplyr::select(depth, geometry)
     }
     pts <- sf::st_transform(pts, crs)
   }
 
-  if (!is.null(contours) & !is.null(point_data)) {
-    point_data <- dplyr::bind_rows(cont_pnts, pts)
+  if (!is.null(contours) & !is.null(depth_points)) {
+    depth_points <- dplyr::bind_rows(cont_pnts, pts)
   } else if (!is.null(contours)) {
-    point_data <- cont_pnts
-  } else if (!is.null(point_data)) {
-    point_data <- pts
+    depth_points <- cont_pnts
+  } else if (!is.null(depth_points)) {
+    depth_points <- pts
   }
 
   # Generate an outline of the lake as points for interpolation ----
@@ -336,22 +242,22 @@ generate_depth_points <- function(shoreline, islands = NULL, point_data = NULL,
   }
 
   if (subsample) {
-    if (nrow(point_data) > 10000) {
-      message("Warning: large number of points for interpolation (", nrow(point_data), ")")
+    if (nrow(depth_points) > 10000) {
+      message("Warning: large number of points for interpolation (", nrow(depth_points), ")")
       # Subsample to 10000
-      point_data <- point_data |>
+      depth_points <- depth_points |>
         dplyr::sample_n(10000, replace = FALSE)
     }
   }
 
-  # Subset point_data to those within the lake
-  idx <- sf::st_intersects(point_data$geometry,
+  # Subset depth_points to those within the lake
+  idx <- sf::st_intersects(depth_points$geometry,
                            shoreline_poly$geometry, sparse = FALSE) |>
     as.vector()
-  sub <- point_data |>
+  sub <- depth_points |>
     dplyr::filter(idx)
 
-  # Combine in-lake point_data & outline
+  # Combine in-lake depth_points & outline
   all <- dplyr::bind_rows(pnt_outline, pnt_inset, sub, island_points) |>
     dplyr::mutate(depth = depth)
 
@@ -365,6 +271,8 @@ generate_depth_points <- function(shoreline, islands = NULL, point_data = NULL,
         dplyr::sample_n(10000)
     }
   }
+  # tm_shape(all) +
+  #   tm_dots(col = "depth", palette = "-Blues", size = 0.1, title = "Depth (m)") 
   message("Finished! [", format(Sys.time()), "]")
   return(all)
 }

@@ -7,7 +7,7 @@
 generate_depth_points(
   shoreline,
   islands = NULL,
-  point_data = NULL,
+  depth_points = NULL,
   contours = NULL,
   res = 2,
   subsample = TRUE,
@@ -19,7 +19,7 @@ generate_depth_points(
 
 \item{islands}{sf object of lake islands if present.}
 
-\item{point_data}{sf object of depth points or a dataframe of points with
+\item{depth_points}{sf object of depth points or a dataframe of points with
 columns 'lon' and 'lat'. Must contain a "depth" column. If NULL, then
 contours must be provided.
 If NULL, then contours must be provided.}
@@ -42,12 +42,12 @@ Generate depth points for interpolation
 \examples{
 shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
 package = "bathytools"))
-point_data <- readRDS(system.file("extdata/depth_points.rds",
+depth_points <- readRDS(system.file("extdata/depth_points.rds",
 package = "bathytools"))
 
 # Generate depth points with points ----
 depth_points <- generate_depth_points(shoreline = shoreline,
-point_data = point_data)
+depth_points = depth_points)
 
 # Generate depth points with contours ----
 contours <- readRDS(system.file("extdata/depth_contours.rds",
