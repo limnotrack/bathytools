@@ -152,10 +152,13 @@ interpolate_points <- function(depth_points, shoreline, islands = NULL, crs,
     
     
   } else if (method == "idw") {
+    # Nearest distance from each grid point to your survey points
+    dists <- terra::distance(grd_ras, data_vec)
+    radius <- max(terra::values(dists), na.rm = TRUE)
+    
     interp <- terra::interpIDW(x = grd_ras, y = data_vec, field = "z",
                                minPoints = 3, maxPoints = 10, smooth = 10,
-                               radius = 1400) |> 
-      terra::mask(shoreline)
+                               radius = radius)
   }
   # Mask the raster with the shoreline
   bathy_raster <- terra::mask(interp, shoreline)
