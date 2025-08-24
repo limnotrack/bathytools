@@ -95,7 +95,7 @@ interpolate_points <- function(depth_points, shoreline, islands = NULL, crs,
     resample <- terra::resample(interp, interp2)
     interp <- resample |> 
       terra::mask(shoreline)
-    terra::plot(interp)
+    # terra::plot(interp)
 
   } else if (method == "tps") {
     
@@ -148,7 +148,7 @@ interpolate_points <- function(depth_points, shoreline, islands = NULL, crs,
     interp <- terra::interpNear(x = grd_ras, y = data_vec, field = "z",
                                radius = radius, 
                                interpolate = TRUE) 
-    terra::plot(interp, main = "Nearest Neighbor Interpolation")
+    # terra::plot(interp, main = "Nearest Neighbor Interpolation")
     
     
   } else if (method == "idw") {
