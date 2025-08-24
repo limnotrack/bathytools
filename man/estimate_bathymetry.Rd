@@ -4,10 +4,15 @@
 \alias{estimate_bathymetry}
 \title{Estimate bathymetry from a shoreline polygon using distance transformation.}
 \usage{
-estimate_bathymetry(shoreline, max_depth, res = 10)
+estimate_bathymetry(shoreline, hypsograph = NULL, max_depth, res = 10)
 }
 \arguments{
 \item{shoreline}{sf object of lake shoreline.}
+
+\item{hypsograph}{data.frame. A hypsograph data frame with columns 'depth' and
+'area'. If provided, the function will use the hypsograph to estimate the
+bathymetry. If not provided, the function will use a linear scaling based on
+the maximum depth.}
 
 \item{max_depth}{numeric. The maximum depth of the lake.}
 
