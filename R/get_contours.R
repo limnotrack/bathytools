@@ -22,17 +22,19 @@ get_contours <- function(bathy_raster, surface = 0, depths = NULL) {
   # Get depths
   depth_out <- get_depths(bathy_raster, surface, depths)
 
-  # Cast to linestring
-  # shoreline <- sf::st_cast(shoreline$geometry, "LINESTRING") |>
-  #   sf::st_sf(depth = 0)
-  # sf::st_geometry(shoreline) <- "geometry"
-  # Get contours
+  mm <- terra::minmax(bathy_raster)
+  # If minimum depth is less than 0, then we need to adjust the output depths to
+  # negative
+  if (mm[2] < 0) {
+    depth_out <- -depth_out
+  }
   cont <- terra::as.contour(x = bathy_raster, levels = depth_out) |>
     sf::st_as_sf() |>
     dplyr::rename(depth = level)
 
   # Check if min depth is in depths
-  mm <- terra::minmax(bathy_raster)
+  mm <- terra::minmax(bathy_raster) |> 
+    round(2)
   if (!mm[1] %in% depth_out) {
     warning("Minimum depth not in depths. Adding minimum depth to contours.")
 
