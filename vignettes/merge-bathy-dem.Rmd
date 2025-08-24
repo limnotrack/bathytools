@@ -85,7 +85,7 @@ The first step is to generate a bathymetry raster from the shoreline and depth d
 ```{r generate-bathy-raster}
 
 bathy_raster <- rasterise_bathy(shoreline = shoreline,
-                                point_data = point_data, crs = 2193,
+                                depth_points = point_data, crs = 2193,
                                 res = 8)
 ```
 
@@ -179,8 +179,8 @@ Here we will extend the hypsograph by 3 meters above the lake surface elevation.
 
 lake_depth <- get_lake_depth(bathy_raster = bathy_raster)
 ext_hyps <- dem_to_hypsograph(shoreline = shoreline, dem_bath = dem_bath, 
-                          lake_elev = lake_elev, lake_depth = lake_depth,
-                          ext_elev = 3)
+                              lake_elev = lake_elev, lake_depth = lake_depth,
+                              ext_elev = 3)
 head(ext_hyps)
 ```
 
