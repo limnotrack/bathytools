@@ -47,6 +47,30 @@ bathy_to_hypso <- function(bathy_raster, surface = 0, depths = NULL) {
     dplyr::mutate(elev = depth) |> 
     dplyr::arrange(desc(depth)) |> 
     dplyr::select(elev, depth, area)
+  
+  if (any(duplicated(df$area))) {
+    dup_area <- df$area[duplicated(df$area)] |> 
+      unique()
+    dups <- df |> 
+      dplyr::filter(area %in% dup_area) 
+    dup_depths <- df |> 
+      dplyr::filter(area %in% dup_area) |> 
+      dplyr::pull(depth)
+    max_dup <- dups |> 
+      dplyr::filter(depth == max(depth)) 
+    upd_df <- df |> 
+      dplyr::filter(area != dup_area)
+    sub_df <- upd_df |> 
+      dplyr::bind_rows(max_dup) 
+    interp <- data.frame(elev = dups$elev, depth = dups$depth) |> 
+      dplyr::mutate(
+        area = approx(x = sub_df$depth, y = sub_df$area, xout = depth,
+                       method = "linear")$y
+      )
+    df <- dplyr::bind_rows(interp, upd_df)
+  }
+  
+  
   # plot(df$area, df$depth)
   return(df)
 }
