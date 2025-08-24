@@ -7,7 +7,7 @@
 rasterise_bathy(
   shoreline,
   islands = NULL,
-  point_data = NULL,
+  depth_points = NULL,
   contours = NULL,
   res = 2,
   subsample = TRUE,
@@ -23,6 +23,11 @@ rasterise_bathy(
 \item{shoreline}{sf object of lake shoreline.}
 
 \item{islands}{sf object of lake islands if present.}
+
+\item{depth_points}{sf object of depth points or a dataframe of points with
+columns 'lon' and 'lat'. Must contain a "depth" column. If NULL, then
+contours must be provided.
+If NULL, then contours must be provided.}
 
 \item{contours}{sf object of depth contours. If NULL, then points must be
 provided.}

@@ -18,14 +18,14 @@
 #' crs = 2193)
 #'
 
-rasterise_bathy <- function(shoreline, islands = NULL, point_data = NULL,
+rasterise_bathy <- function(shoreline, islands = NULL, depth_points = NULL,
                             contours = NULL, res = 2, subsample = TRUE,
                             crs, method = "MBA", print_plot = TRUE,
                             n = 1, m = 1, h = 8) {
 
   depth_points <- generate_depth_points(shoreline = shoreline, 
                                         islands = islands,
-                                        depth_points = point_data, 
+                                        depth_points = depth_points, 
                                         contours = contours, res = res,
                                         subsample = subsample, crs = crs)
 
