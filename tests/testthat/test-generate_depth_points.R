@@ -5,7 +5,7 @@ test_that("generate depth points with points", {
   point_data <- readRDS(system.file("extdata/depth_points.rds",
                                     package = "bathytools"))
   depth_points <- generate_depth_points(shoreline = shoreline,
-                                        point_data = point_data)
+                                        depth_points = point_data)
   testthat::expect_s3_class(depth_points, "sf")
   testthat::expect_true("depth" %in% names(depth_points))
   testthat::expect_true(all(depth_points$depth <= 0))
@@ -23,7 +23,7 @@ test_that("generate depth points with sf points", {
     sf::st_transform(2193)
 
   depth_points <- generate_depth_points(shoreline = shoreline,
-                                        point_data = point_data)
+                                        depth_points = point_data)
   testthat::expect_s3_class(depth_points, "sf")
   testthat::expect_true("depth" %in% names(depth_points))
   testthat::expect_true(all(depth_points$depth <= 0))
