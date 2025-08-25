@@ -109,16 +109,24 @@ Merge lake bathymetry raster with a DEM raster (smooth blend at shoreline)"></he
 <span class="r-in"><span>package <span class="op">=</span> <span class="st">"bathytools"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">catchment</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/rotoma_catchment.rds"</span>,</span></span>
 <span class="r-in"><span>                                 package <span class="op">=</span> <span class="st">"bathytools"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">point_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/depth_points.rds"</span>,</span></span>
+<span class="r-in"><span><span class="va">depth_points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/depth_points.rds"</span>,</span></span>
 <span class="r-in"><span>package <span class="op">=</span> <span class="st">"bathytools"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">bathy_raster</span> <span class="op">&lt;-</span> <span class="fu"><a href="rasterise_bathy.html">rasterise_bathy</a></span><span class="op">(</span>shoreline <span class="op">=</span> <span class="va">shoreline</span>,</span></span>
-<span class="r-in"><span>point_data <span class="op">=</span> <span class="va">point_data</span>, crs <span class="op">=</span> <span class="fl">2193</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in rasterise_bathy(shoreline = shoreline, point_data = point_data,     crs = 2193):</span> unused argument (point_data = point_data)</span>
+<span class="r-in"><span>depth_points <span class="op">=</span> <span class="va">depth_points</span>, crs <span class="op">=</span> <span class="fl">2193</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Generating depth points... [2025-08-25 02:37:13]</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Finished! [2025-08-25 02:37:14]</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Interpolating to raster... [2025-08-25 02:37:14]</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Adjusting depths &gt;= 0 to  -0.82 m</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Finished! [2025-08-25 02:37:25]</span>
+<span class="r-plt img"><img src="merge_bathy_dem-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">dem_raster</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/dem_32m.tif"</span>,</span></span>
 <span class="r-in"><span>package <span class="op">=</span> <span class="st">"bathytools"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">dem_bath</span> <span class="op">&lt;-</span> <span class="fu">merge_bathy_dem</span><span class="op">(</span>shoreline <span class="op">=</span> <span class="va">shoreline</span>, bathy_raster <span class="op">=</span> <span class="va">bathy_raster</span>,</span></span>
 <span class="r-in"><span>dem_raster <span class="op">=</span> <span class="va">dem_raster</span>, catchment <span class="op">=</span> <span class="va">catchment</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'crs': object 'bathy_raster' not found</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Resolutions differ. Resampling bathy_raster to DEM resolution.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Lake surface elevation from DEM: 313.3 m</span>
+<span class="r-plt img"><img src="merge_bathy_dem-2.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="merge_bathy_dem-3.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
