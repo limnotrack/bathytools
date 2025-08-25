@@ -54,10 +54,10 @@ shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
 package = "bathytools"))
 catchment <- readRDS(system.file("extdata/rotoma_catchment.rds",
                                  package = "bathytools"))
-point_data <- readRDS(system.file("extdata/depth_points.rds",
+depth_points <- readRDS(system.file("extdata/depth_points.rds",
 package = "bathytools"))
 bathy_raster <- rasterise_bathy(shoreline = shoreline,
-point_data = point_data, crs = 2193)
+depth_points = depth_points, crs = 2193)
 dem_raster <- terra::rast(system.file("extdata/dem_32m.tif",
 package = "bathytools"))
 dem_bath <- merge_bathy_dem(shoreline = shoreline, bathy_raster = bathy_raster,

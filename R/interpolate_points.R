@@ -19,9 +19,9 @@
 #'
 #' @examples
 #' shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
-#' package = "bathy_rastertools"))
+#' package = "bathytools"))
 #' depth_points <- readRDS(system.file("extdata/depth_points.rds",
-#'                                   package = "bathy_rastertools"))
+#'                                   package = "bathytools"))
 #' depth_points <- generate_depth_points(shoreline = shoreline,
 #' depth_points = depth_points)
 #' bathy_raster <- interpolate_points(depth_points = depth_points, shoreline = shoreline,

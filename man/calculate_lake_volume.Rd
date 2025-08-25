@@ -35,10 +35,10 @@ Calculate the volume of a lake using bathymetry data or a hypsograph
 \examples{
 shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
 package = "bathytools"))
-point_data <- readRDS(system.file("extdata/depth_points.rds",
+depth_points <- readRDS(system.file("extdata/depth_points.rds",
 package = "bathytools"))
 bathy_raster <- rasterise_bathy(shoreline = shoreline,
-point_data = point_data, crs = 2193)
+depth_points = depth_points, crs = 2193)
 calculate_lake_volume(bathy_raster = bathy_raster)
 
 }

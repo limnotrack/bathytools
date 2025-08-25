@@ -65,9 +65,9 @@ Generate depth points for interpolation
 \examples{
 shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
 package = "bathytools"))
-point_data <- readRDS(system.file("extdata/depth_points.rds",
+depth_points <- readRDS(system.file("extdata/depth_points.rds",
 package = "bathytools"))
-bathy <- rasterise_bathy(shoreline = shoreline, point_data = point_data,
+bathy <- rasterise_bathy(shoreline = shoreline, depth_points = depth_points,
 crs = 2193)
 
 }

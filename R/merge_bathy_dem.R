@@ -21,10 +21,10 @@
 #' package = "bathytools"))
 #' catchment <- readRDS(system.file("extdata/rotoma_catchment.rds",
 #'                                  package = "bathytools"))
-#' point_data <- readRDS(system.file("extdata/depth_points.rds",
+#' depth_points <- readRDS(system.file("extdata/depth_points.rds",
 #' package = "bathytools"))
 #' bathy_raster <- rasterise_bathy(shoreline = shoreline,
-#' point_data = point_data, crs = 2193)
+#' depth_points = depth_points, crs = 2193)
 #' dem_raster <- terra::rast(system.file("extdata/dem_32m.tif",
 #' package = "bathytools"))
 #' dem_bath <- merge_bathy_dem(shoreline = shoreline, bathy_raster = bathy_raster,
@@ -35,9 +35,9 @@ merge_bathy_dem <- function(shoreline, bathy_raster, dem_raster,
                             crop_dem_to_catchment = TRUE) {
 
   # Check if crs match
-  if (terra::crs(dem_raster) != terra::crs(bathy_raster)) {
-    stop("CRS of bathy_raster and dem_raster do not match.")
-  }
+  # if (terra::crs(dem_raster) != terra::crs(bathy_raster)) {
+  #   stop("CRS of bathy_raster and dem_raster do not match.")
+  # }
 
   # Compare with CRS of the shoreline
   if (sf::st_crs(shoreline) != sf::st_crs(dem_raster)) {
@@ -88,7 +88,7 @@ merge_bathy_dem <- function(shoreline, bathy_raster, dem_raster,
     message(strwrap(paste0("Warning: Resolutions of bathy_raster [",
                            paste0(bathy_res, collapse = ", "), "] and
                            dem_raster [",  paste0(dem_res, collapse = ", "), "]
-                           do not match.\nResampling bathy_raster  to match
+                           do not match.\n Resampling bathy_raster  to match
                            dem_raster"), width = 80))
   }
   bathy_raster <- terra::resample(bathy_raster, dem_raster)
@@ -104,6 +104,12 @@ merge_bathy_dem <- function(shoreline, bathy_raster, dem_raster,
   
   # Smooth shoreline
   dem_bath_smooth <- smooth_shoreline(dem_bath, shoreline)
+  
+  mm <- terra::minmax(bathy_raster)
+  lake_depth <- round(mm[2] - mm[1], 2)
+  ext_hyps <- dem_to_hypsograph(shoreline = shoreline, dem_bath = dem_bath, 
+                                lake_depth = lake_depth,
+                                ext_elev = 3)
   
   # Rename the variable in the raster
   names(dem_bath) <- c("elevation")

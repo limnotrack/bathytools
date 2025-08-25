@@ -12,10 +12,10 @@
 #' @examples
 #' shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
 #' package = "bathytools"))
-#' point_data <- readRDS(system.file("extdata/depth_points.rds",
+#' depth_points <- readRDS(system.file("extdata/depth_points.rds",
 #' package = "bathytools"))
 #' bathy_raster <- rasterise_bathy(shoreline = shoreline,
-#' point_data = point_data, crs = 2193, res = 8)
+#' depth_points = depth_points, crs = 2193, res = 8)
 #' contours <- get_contours(bathy_raster = bathy_raster)
 get_contours <- function(bathy_raster, surface = 0, depths = NULL) {
 
