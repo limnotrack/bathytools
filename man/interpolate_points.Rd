@@ -31,7 +31,11 @@ If NULL, then contours must be provided.}
 
 \item{res}{numeric resolution of output raster in metres.}
 
-\item{method}{character interpolation method. Options are 'MBA' (default).}
+\item{method}{character interpolation method. Options are c('MBA', 'tps',
+'nn', 'idw'). Default is 'nn' (nearest neighbor). 'MBA' uses the
+MBA::mba.surf function, 'tps' uses a thin plate spline from the fields
+package, 'nn' uses nearest neighbor interpolation from the terra package,
+and 'idw' uses inverse distance weighting from the terra package.}
 
 \item{n}{initial size of the spline space in the hierarchical
     construction along the x axis. If the rectangular domain is a

@@ -1,7 +1,11 @@
 #' Interpolate point depth data to a raster
 #'
 #' @inheritParams generate_depth_points
-#' @param method character interpolation method. Options are 'MBA' (default).
+#' @param method character interpolation method. Options are c('MBA', 'tps',
+#' 'nn', 'idw'). Default is 'nn' (nearest neighbor). 'MBA' uses the
+#' MBA::mba.surf function, 'tps' uses a thin plate spline from the fields
+#' package, 'nn' uses nearest neighbor interpolation from the terra package,
+#' and 'idw' uses inverse distance weighting from the terra package.
 #' @inheritParams MBA::mba.surf
 #' @param print_plot logical print plot of interpolated raster.
 #'
