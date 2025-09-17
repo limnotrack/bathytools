@@ -7,7 +7,7 @@
 get_lake_surface_elevation(dem_raster, shoreline)
 }
 \arguments{
-\item{dem_raster}{SpatRaster object with DEM elevations.}
+\item{dem_raster}{SpatRaster object with the DEM data.}
 
 \item{shoreline}{sf object of lake shoreline.}
 }
