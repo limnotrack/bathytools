@@ -31,8 +31,11 @@ dem_to_hypsograph <- function(shoreline = NULL, dem_bath, lake_elev = NULL,
   
   # Mask to shoreline if provided
   if (!is.null(shoreline)) {
-    in_lake <- terra::mask(dem_bath, shoreline)
-    out_lake <- terra::mask(dem_bath, shoreline, inverse = TRUE)
+    shoreline_vect <- shoreline |> 
+      terra::vect() |> 
+      terra::project(terra::crs(dem_bath))
+    in_lake <- terra::mask(dem_bath, shoreline_vect)
+    out_lake <- terra::mask(dem_bath, shoreline_vect, inverse = TRUE)
   } else {
     in_lake <- dem_bath
     out_lake <- NULL
@@ -70,7 +73,8 @@ dem_to_hypsograph <- function(shoreline = NULL, dem_bath, lake_elev = NULL,
     depths <- mod_layers |> 
       dplyr::filter(z <= lake_depth) |> 
       dplyr::mutate(depths = lake_elev - zi) |> 
-      dplyr::pull(depths)
+      dplyr::pull(depths) |> 
+      round(3)
   }
   
   # Core hypsograph below lake surface
