@@ -120,4 +120,5 @@ test_that("can merge bathy with DEM", {
   d3 <- v2 - v3
   testthat::expect_true(abs(d1) / v1 < 0.01)
   testthat::expect_true(abs(d2) / v1 < 0.01)
+  testthat::expect_true(abs(d3) / v1 < 0.01)
 })
