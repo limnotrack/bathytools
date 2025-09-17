@@ -141,35 +141,41 @@ dem_to_hypsograph <- function(shoreline = NULL, dem_bath, lake_elev = NULL,
 #' @importFrom sf st_as_sf st_cast st_intersects st_transform
 #' @importFrom dplyr filter mutate bind_rows
 #' @noRd
-
-extract_ext_elev_polygon <- function(dem_bath, lake_elev, ext_elev, shoreline) {
-  # Create raster mask of cells <= lake_elev + ext_elev
-  mask_rast <- terra::ifel(dem_bath <= (lake_elev + ext_elev), 1, NA)
-  
-  # Convert to polygons
-  polys <- terra::as.polygons(mask_rast, dissolve = TRUE) |>
-    sf::st_as_sf() |>
-    sf::st_cast("POLYGON")
-  
-  # Ensure shoreline is in same CRS
-  if (sf::st_crs(polys) != sf::st_crs(shoreline)) {
-    shoreline <- sf::st_transform(shoreline, sf::st_crs(polys))
-  }
-  
-  # Filter polygons that intersect the shoreline polygon
-  intersects <- sf::st_intersects(polys, shoreline, sparse = FALSE)[, 1]
-  
-  if (!any(intersects)) {
-    stop("No polygon containing lake found in extended elevation area.")
-  }
-  
-  # Among polygons intersecting shoreline, pick the largest by area
-  polys_sub <- polys[intersects, ]
-  areas <- sf::st_area(polys_sub)
-  largest_poly <- polys_sub[which.max(areas), ]
-  
-  return(largest_poly)
-}
+# extract_ext_elev_polygon <- function(dem_bath, lake_elev, ext_elev, shoreline) {
+#   # Create raster mask of cells <= lake_elev + ext_elev
+#   mask_rast <- terra::ifel(dem_bath <= (lake_elev + ext_elev), 1, NA)
+#   
+#   shoreline_vect <- terra::vect(shoreline) |> 
+#     terra::project(terra::crs(dem_bath))
+#   
+#   # Convert to polygons
+#   polys <- terra::as.polygons(mask_rast, dissolve = TRUE) 
+#   
+#   # Ensure shoreline is in same CRS
+#   # if (sf::st_crs(polys) != sf::st_crs(shoreline)) {
+#   #   shoreline <- sf::st_transform(shoreline, sf::st_crs(polys))
+#   # }
+#   
+#   # Filter polygons that intersect the shoreline polygon
+#   # intersects <- sf::st_intersects(polys, shoreline, sparse = FALSE)[, 1]
+#   intersects <- terra::relate(x = polys, y = shoreline_vect, 
+#                               relation = "intersects")
+#   
+#   if (!any(intersects)) {
+#     stop("No polygon containing lake found in extended elevation area.")
+#   }
+#   
+#   # Select the largest polygon intersecting the shoreline
+#   polys_sub <- polys[intersects, ]
+#   areas <- terra::expanse(polys_sub)
+#   
+#   # Among polygons intersecting shoreline, pick the largest by area
+#   # polys_sub <- polys[intersects, ]
+#   # areas <- sf::st_area(polys_sub)
+#   largest_poly <- polys_sub[which.max(areas), ]
+#   
+#   return(largest_poly)
+# }
 
 
 # 
