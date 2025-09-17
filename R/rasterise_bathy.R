@@ -2,7 +2,9 @@
 #'
 #' @inheritParams generate_depth_points
 #' @inheritParams interpolate_points
-#' @param method character interpolation method. Options are 'MBA' (default),
+#' @param method character interpolation method. Options are nearest neighbour 
+#' ('nn') (default), multilevel B-splines ('MBA'), thin plate spline ('tps'),
+#' and inverse distance weighting ('idw').
 #' @inheritParams sf::st_transform
 #' @inheritParams MBA::mba.surf
 #'
@@ -20,7 +22,7 @@
 
 rasterise_bathy <- function(shoreline, islands = NULL, depth_points = NULL,
                             contours = NULL, res = 2, subsample = TRUE,
-                            crs, method = "MBA", print_plot = TRUE,
+                            crs, method = "nn", print_plot = TRUE,
                             n = 1, m = 1, h = 8) {
 
   depth_points <- generate_depth_points(shoreline = shoreline, 

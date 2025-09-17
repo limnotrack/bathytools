@@ -12,7 +12,7 @@ rasterise_bathy(
   res = 2,
   subsample = TRUE,
   crs,
-  method = "MBA",
+  method = "nn",
   print_plot = TRUE,
   n = 1,
   m = 1,
@@ -38,7 +38,9 @@ provided.}
 
 \item{crs}{target coordinate reference system: object of class \code{crs}, or input string for \link[sf]{st_crs}}
 
-\item{method}{character interpolation method. Options are 'MBA' (default),}
+\item{method}{character interpolation method. Options are nearest neighbour
+('nn') (default), multilevel B-splines ('MBA'), thin plate spline ('tps'),
+and inverse distance weighting ('idw').}
 
 \item{print_plot}{logical print plot of interpolated raster.}
 
