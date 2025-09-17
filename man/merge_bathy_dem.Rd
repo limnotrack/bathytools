@@ -13,41 +13,28 @@ merge_bathy_dem(
   crop_dem_to_catchment = TRUE,
   blend_buffer = 10
 )
-
-merge_bathy_dem(
-  shoreline,
-  bathy_raster,
-  dem_raster,
-  transform_shoreline = TRUE,
-  catchment = NULL,
-  crop_dem_to_catchment = TRUE,
-  blend_buffer = 10
-)
 }
 \arguments{
 \item{shoreline}{sf object of lake shoreline.}
 
-\item{bathy_raster}{SpatRaster object with bathymetry depths (negative values).}
+\item{bathy_raster}{SpatRaster object with the bathymetry data.}
 
-\item{dem_raster}{SpatRaster object with DEM elevations.}
+\item{dem_raster}{SpatRaster object with the DEM data.}
 
-\item{transform_shoreline}{logical. If TRUE, reprojects shoreline to match DEM CRS.}
+\item{transform_shoreline}{logical. If TRUE, the shoreline will be
+transformed to match the CRS of the DEM raster.}
 
-\item{catchment}{sf object of the catchment boundary.}
+\item{catchment}{sf object of the catchment boundary. If provided, the DEM
+raster will be cropped to the catchment boundary.}
 
-\item{crop_dem_to_catchment}{logical. If TRUE, crops DEM to catchment boundary.}
-
-\item{blend_buffer}{numeric. Width (map units) of the shoreline blending zone.}
+\item{crop_dem_to_catchment}{logical. If TRUE, the DEM raster will be cropped
+to the catchment boundary. Requires catchment to be provided.}
 }
 \value{
 SpatRaster object with the merged bathymetry and DEM data.
-
-SpatRaster object with merged bathymetry and DEM data.
 }
 \description{
 Merge lake bathymetry raster with a DEM raster
-
-Merge lake bathymetry raster with a DEM raster (smooth blend at shoreline)
 }
 \examples{
 shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
