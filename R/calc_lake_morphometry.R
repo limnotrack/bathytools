@@ -209,6 +209,9 @@
 #' @return A named list of morphometric statistics
 #' 
 #' @importFrom cli cli_abort
+#' @importFrom e1071 skewness kurtosis
+#' @importFrom sf st_as_sf st_perimeter st_bbox
+#' @export
 #'
 #' @examples
 #' \dontrun{
@@ -467,6 +470,9 @@ calc_lake_morphometry <- function(bathy_raster,
 #'   that raise an error are dropped with a `warning()` and do not appear in
 #'   the output.
 #' @export
+#' @importFrom parallel makeCluster parLapply stopCluster clusterExport 
+#' clusterEvalQ detectCores
+#' @importFrom sf st_as_sf st_perimeter st_bbox
 #' @examples
 #' \dontrun{
 #'   files     <- list.files("bathymetry/", pattern = "\\.tif$", full.names = TRUE)
@@ -484,14 +490,52 @@ batch_lake_morphometry <- function(raster_list,
                                    n_cores  = parallel::detectCores() - 1L,
                                    ...) {
   
-  # --- 0. Name unlabelled lists ----------------------------------------------
+  # --- 0. Normalise input to a named list of file paths or SpatRasters -------
+  if (is.character(raster_list)) {
+    # Accept a plain character vector of paths directly
+    raster_list <- as.list(raster_list)
+  }
+  
   if (is.null(names(raster_list))) {
     names(raster_list) <- paste0("lake_", seq_along(raster_list))
   }
   
-  # --- 1. Shared processing closure -----------------------------------------
-  # Wraps calc_lake_morphometry in error handling; returns a data.frame or NULL
-  .process_one <- \(r) {
+  # --- 1. Resolve to file paths where possible -------------------------------
+  # terra SpatRasters cannot be serialised over PSOCK sockets. Convert each
+  # list element to its source file path. Elements that are already strings
+  # are left as-is. In-memory rasters with no file source are flagged.
+  .to_path <- \(x) {
+    if (is.character(x)) return(x)
+    src <- terra::sources(x)
+    if (nzchar(src)) src else NA_character_
+  }
+  
+  paths     <- vapply(raster_list, .to_path, FUN.VALUE = character(1))
+  has_path  <- !is.na(paths)
+  
+  if (parallel && any(!has_path)) {
+    warning(
+      sum(!has_path), " raster(s) have no file source and cannot be sent to ",
+      "parallel workers. These lakes will be processed sequentially.\n",
+      "  Affected lakes: ",
+      paste(names(raster_list)[!has_path], collapse = ", ")
+    )
+  }
+  
+  # --- 2. Worker function (operates on a file path) --------------------------
+  .process_path <- \(path, ...) {
+    tryCatch({
+      r <- terra::rast(path)
+      calc_lake_morphometry(r, ...) |> as.data.frame()
+    },
+    error = \(e) {
+      warning("Error processing lake (", path, "): ", conditionMessage(e))
+      NULL
+    })
+  }
+  
+  # Worker function for in-memory rasters (sequential fallback only)
+  .process_raster <- \(r, ...) {
     tryCatch(
       calc_lake_morphometry(r, ...) |> as.data.frame(),
       error = \(e) {
@@ -501,41 +545,55 @@ batch_lake_morphometry <- function(raster_list,
     )
   }
   
-  # --- 2. Execute: sequential or parallel -----------------------------------
-  if (!parallel) {
+  # --- 3. Execute ------------------------------------------------------------
+  results <- vector("list", length(raster_list))
+  names(results) <- names(raster_list)
+  
+  # -- 3a. Parallel branch: only lakes that have a resolvable file path
+  if (parallel && any(has_path)) {
     
-    results <- lapply(raster_list, .process_one)
-    
-  } else {
-    
-    # Cap workers at the number of lakes — no point in idle workers
-    n_cores <- min(n_cores, length(raster_list))
-    n_cores <- max(n_cores, 1L)   # guard against 0 or negative values
+    n_cores <- min(n_cores, sum(has_path))
+    n_cores <- max(n_cores, 1L)
     
     cl <- parallel::makeCluster(n_cores)
     on.exit(parallel::stopCluster(cl), add = TRUE)
     
-    # Each worker needs the processing function and its dependencies
     parallel::clusterExport(
       cl,
-      varlist = c("calc_lake_morphometry",
-                  ".calc_hypsographic",
-                  ".fit_hypsographic_power",
-                  ".trapz",
-                  ".volume_at_depth_percentiles"),
-      envir   = environment()
+      varlist = c(".process_path"),
+      envir = environment()
     )
     
-    parallel::clusterEvalQ(cl, {
-      library(terra)
-      library(e1071)
-      library(sf)
-    })
+    # parallel::clusterEvalQ(cl, {
+    #   library(terra)
+    #   library(e1071)
+    #   library(sf)
+    # })
     
-    results <- parallel::parLapply(cl, raster_list, .process_one)
+    # Pass dots as a list and use do.call inside the worker to forward them
+    dots <- list(...)
+    parallel::clusterExport(cl, varlist = "dots", envir = environment())
+    
+    results[has_path] <- parallel::parLapply(
+      cl,
+      paths[has_path],
+      \(p) do.call(.process_path, c(list(path = p), dots))
+    )
   }
   
-  # --- 3. Combine results ---------------------------------------------------
+  # -- 3b. Sequential branch: parallel = FALSE, or in-memory fallback lakes
+  sequential_idx <- if (parallel) which(!has_path) else seq_along(raster_list)
+  
+  for (i in sequential_idx) {
+    x <- raster_list[[i]]
+    results[[i]] <- if (is.character(x) || (inherits(x, "SpatRaster") && has_path[i])) {
+      do.call(.process_path, c(list(path = paths[i]), list(...)))
+    } else {
+      do.call(.process_raster, c(list(r = x), list(...)))
+    }
+  }
+  
+  # --- 4. Combine ------------------------------------------------------------
   Map(\(df, nm) if (!is.null(df)) cbind(lake_id = nm, df),
       results, names(results)) |>
     (\(x) x[!sapply(x, is.null)])() |>
@@ -611,7 +669,7 @@ batch_lake_morphometry <- function(raster_list,
 #' @noRd
 .trapz <- function(x, y) {
   dx <- diff(x)
-  sum(dx * (utils::head(y, -1) + utils::tail(y, -1)) / 2)
+  sum(dx * (head(y, -1) + tail(y, -1)) / 2)
 }
 
 

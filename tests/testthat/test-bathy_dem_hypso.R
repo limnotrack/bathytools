@@ -48,7 +48,19 @@ test_that("can generate hypsograph", {
   testthat::expect_true(is.list(lake_morph))
   testthat::expect_true(all(c("surface_area_m2", "z_max", "z_mean", "volume_m3") 
                             %in% names(lake_morph)))
-
+  
+  raster_list <- list(lake1 = bathy_raster, lake2 = bathy_raster)
+  raster_files <- vapply(raster_list, function(x) {
+    f <- tempfile(fileext = ".tif")
+    terra::writeRaster(x, f)
+    return(f)
+  }, character(1))
+  out <- batch_lake_morphometry(raster_list = raster_files, parallel = TRUE, 
+                                n_cores = 2L)
+  testthat::expect_true(is.data.frame(out))
+  testthat::expect_true(all(c("lake_id", "surface_area_m2", "z_max", "z_mean", "volume_m3") 
+                            %in% names(out)))
+  
   hyps <- bathy_to_hypso(bathy_raster = bathy_raster)
   testthat::expect_true(is.data.frame(hyps))
 
