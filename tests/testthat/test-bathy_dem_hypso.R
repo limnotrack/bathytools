@@ -42,6 +42,12 @@ test_that("can generate hypsograph", {
                                     package = "bathytools"))
   bathy_raster <- rasterise_bathy(shoreline = shoreline, 
                                   depth_points = depth_points, crs = 2193)
+  
+  lake_morph <- calc_lake_morphometry(bathy_raster = bathy_raster, 
+                                      shoreline = shoreline)
+  testthat::expect_true(is.list(lake_morph))
+  testthat::expect_true(all(c("surface_area_m2", "z_max", "z_mean", "volume_m3") 
+                            %in% names(lake_morph)))
 
   hyps <- bathy_to_hypso(bathy_raster = bathy_raster)
   testthat::expect_true(is.data.frame(hyps))
