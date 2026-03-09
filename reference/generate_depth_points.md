@@ -65,15 +65,15 @@ package = "bathytools"))
 # Generate depth points with points ----
 depth_points <- generate_depth_points(shoreline = shoreline,
 depth_points = depth_points)
-#> Generating depth points... [2026-03-09 21:21:01]
-#> Finished! [2026-03-09 21:21:01]
+#> Generating depth points... [2026-03-09 22:31:39]
+#> Finished! [2026-03-09 22:31:39]
 
 # Generate depth points with contours ----
 contours <- readRDS(system.file("extdata/depth_contours.rds",
 package = "bathytools"))
 depth_points <- generate_depth_points(shoreline = shoreline,
 contours = contours)
-#> Generating depth points... [2026-03-09 21:21:01]
+#> Generating depth points... [2026-03-09 22:31:39]
 #> Warning: repeating attributes for all sub-geometries for which they may not be constant
 #> Warning: repeating attributes for all sub-geometries for which they may not be constant
 #> Warning: repeating attributes for all sub-geometries for which they may not be constant
@@ -87,5 +87,5 @@ contours = contours)
 #> Warning: repeating attributes for all sub-geometries for which they may not be constant
 #> Warning: repeating attributes for all sub-geometries for which they may not be constant
 #> Warning: large number of points for interpolation (100695)
-#> Finished! [2026-03-09 21:21:05]
+#> Finished! [2026-03-09 22:31:43]
 ```

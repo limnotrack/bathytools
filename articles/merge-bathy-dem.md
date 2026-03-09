@@ -113,11 +113,11 @@ bathymetry raster.
 bathy_raster <- rasterise_bathy(shoreline = shoreline,
                                 depth_points = point_data, crs = 2193,
                                 res = 8)
-#> Generating depth points... [2026-03-09 21:28:07]
-#> Finished! [2026-03-09 21:28:07]
-#> Interpolating to raster... [2026-03-09 21:28:07]
+#> Generating depth points... [2026-03-09 22:37:43]
+#> Finished! [2026-03-09 22:37:43]
+#> Interpolating to raster... [2026-03-09 22:37:43]
 #> Adjusting depths >= 0 to  -0.81 m
-#> Finished! [2026-03-09 21:28:26]
+#> Finished! [2026-03-09 22:37:59]
 ```
 
 ![](merge-bathy-dem_files/figure-html/generate-bathy-raster-1.png)

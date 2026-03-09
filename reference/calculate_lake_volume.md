@@ -50,11 +50,11 @@ depth_points <- readRDS(system.file("extdata/depth_points.rds",
 package = "bathytools"))
 bathy_raster <- rasterise_bathy(shoreline = shoreline,
 depth_points = depth_points, crs = 2193)
-#> Generating depth points... [2026-03-09 21:18:53]
-#> Finished! [2026-03-09 21:18:54]
-#> Interpolating to raster... [2026-03-09 21:18:54]
+#> Generating depth points... [2026-03-09 22:29:53]
+#> Finished! [2026-03-09 22:29:53]
+#> Interpolating to raster... [2026-03-09 22:29:53]
 #> Adjusting depths >= 0 to  -0.81 m
-#> Finished! [2026-03-09 21:20:58]
+#> Finished! [2026-03-09 22:31:37]
 
 calculate_lake_volume(bathy_raster = bathy_raster)
 #> [1] 435637277
