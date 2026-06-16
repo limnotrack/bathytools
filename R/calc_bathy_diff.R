@@ -19,5 +19,12 @@ calc_bathy_diff <- function(obs, pred) {
   if (all(obs_res != pred_res)) {
     pred <- terra::resample(pred, obs)
   }
+  # Compare extents
+  obs_ext <- terra::ext(obs)
+  pred_ext <- terra::ext(pred)
+  if (!all(obs_ext == pred_ext)) {
+    pred <- terra::resample(pred, obs)
+  }
+  
   pred - obs
 }

@@ -16,9 +16,6 @@ the \link{get_lake_surface_elevation} function.}
 \item{ext_elev}{numeric, additional elevation to extend the lake surface.
 This allows you to generate a flood map. Default is 0.}
 }
-\value{
-\code{\link[tmap]{tmap-element}}
-}
 \description{
 Draw a elevation map with bathymetry and surrounding topography
 }

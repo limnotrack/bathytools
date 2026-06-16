@@ -41,8 +41,6 @@ tm_dem_bath <- function(dem_bath, lake_elev, ext_elev = 0) {
                  "#EBB25E", "#F0C9C0"))
 
   tmap::tm_shape(dem_bath) +
-    tmap::tm_raster(style = "cont", palette = colours, breaks = breaks)
-
-
-
+    tmap::tm_raster(col.scale = tmap::tm_scale_continuous(values = colours, 
+                                                          ticks = breaks))
 }

@@ -9,15 +9,17 @@
 #' @param return_rast logical. If TRUE, return a raster with the calculated
 #' volume in each grid cell. Default is FALSE.
 #'
-#' @return numeric. The volume of the lake in cubic meters.
+#' @return numeric. The volume of the lake in cubic meters (m^3).
+#' If `return_rast` is TRUE, a SpatRaster object with the volume
+#' in each grid cell is returned.
 #' @export
 #' @examples
 #' shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
 #' package = "bathytools"))
-#' point_data <- readRDS(system.file("extdata/depth_points.rds",
+#' depth_points <- readRDS(system.file("extdata/depth_points.rds",
 #' package = "bathytools"))
 #' bathy_raster <- rasterise_bathy(shoreline = shoreline,
-#' point_data = point_data, crs = 2193)
+#' depth_points = depth_points, crs = 2193)
 #' calculate_lake_volume(bathy_raster = bathy_raster)
 #'
 
@@ -54,7 +56,7 @@ calculate_lake_volume <- function(bathy_raster = NULL, hyps = NULL,
     if (!is.data.frame(hyps)) {
       stop("Input must be a data.frame object")
     }
-    if (!all(names(hyps) %in% c("depth", "area"))) {
+    if (!all(c("depth", "area") %in% names(hyps))) {
       stop("Input data.frame must have columns 'depth' and 'area'")
     }
     if (!is.null(depth)) {

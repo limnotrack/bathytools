@@ -6,12 +6,7 @@
 #' depth and area at each depth.
 #'
 #' @inheritParams merge_bathy_dem
-#' @param surface numeric. The surface elevation of the lake. Default is 0.
-#' @param depths numeric. The depths at which to calculate the area. If a single
-#' numeric value is provided, the function will calculate the area at each depth
-#' from the surface to the minimum depth of the bathymetry raster at intervals of
-#' the provided value. If a vector of numeric values is provided, the function
-#' will calculate the area at each depth specified in the vector. Default is 1.
+#' @inheritParams get_depths
 #'
 #' @importFrom terra minmax res values
 #' @importFrom dplyr arrange
@@ -22,20 +17,26 @@
 #' @examples
 #' shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
 #' package = "bathytools"))
-#' point_data <- readRDS(system.file("extdata/depth_points.rds",
+#' depth_points <- readRDS(system.file("extdata/depth_points.rds",
 #' package = "bathytools"))
 #' bathy_raster <- rasterise_bathy(shoreline = shoreline,
-#' point_data = point_data, crs = 2193)
+#' depth_points = depth_points, crs = 2193)
 #' hyps <- bathy_to_hypso(bathy_raster = bathy_raster)
 
-bathy_to_hypso <- function(bathy_raster, surface = 0, depths = 1) {
+bathy_to_hypso <- function(bathy_raster, surface = 0, depths = NULL) {
 
   # Get depths
   depth_out <- get_depths(bathy_raster, surface, depths)
 
-
   # Get resolution of bathy object
   res <- terra::res(bathy_raster)
+  
+  mm <- terra::minmax(bathy_raster)
+  # If minimum depth is less than 0, then we need to adjust the output depths to
+  # negative
+  if (mm[1] < 0) {
+    depth_out <- -depth_out
+  }
 
   # Calculate areas of each depth
   areas <- rep(NA, length(depth_out))
@@ -43,6 +44,33 @@ bathy_to_hypso <- function(bathy_raster, surface = 0, depths = 1) {
     sum(terra::values(bathy_raster) <= d, na.rm = TRUE) * res[1] * res[2]
   })
   df <- data.frame(depth = depth_out, area = areas) |>
-    dplyr::arrange(desc(depth))
+    dplyr::mutate(elev = depth) |> 
+    dplyr::arrange(desc(depth)) |> 
+    dplyr::select(elev, depth, area)
+  
+  if (any(duplicated(df$area))) {
+    dup_area <- df$area[duplicated(df$area)] |> 
+      unique()
+    dups <- df |> 
+      dplyr::filter(area %in% dup_area) 
+    dup_depths <- df |> 
+      dplyr::filter(area %in% dup_area) |> 
+      dplyr::pull(depth)
+    max_dup <- dups |> 
+      dplyr::filter(depth == max(depth)) 
+    upd_df <- df |> 
+      dplyr::filter(area != dup_area)
+    sub_df <- upd_df |> 
+      dplyr::bind_rows(max_dup) 
+    interp <- data.frame(elev = dups$elev, depth = dups$depth) |> 
+      dplyr::mutate(
+        area = approx(x = sub_df$depth, y = sub_df$area, xout = depth,
+                       method = "linear")$y
+      )
+    df <- dplyr::bind_rows(interp, upd_df)
+  }
+  
+  
+  # plot(df$area, df$depth)
   return(df)
 }

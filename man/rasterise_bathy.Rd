@@ -7,12 +7,12 @@
 rasterise_bathy(
   shoreline,
   islands = NULL,
-  point_data = NULL,
+  depth_points = NULL,
   contours = NULL,
   res = 2,
   subsample = TRUE,
   crs,
-  method = "MBA",
+  method = "nn",
   print_plot = TRUE,
   n = 1,
   m = 1,
@@ -24,7 +24,7 @@ rasterise_bathy(
 
 \item{islands}{sf object of lake islands if present.}
 
-\item{point_data}{sf object of depth points or a dataframe of points with
+\item{depth_points}{sf object of depth points or a dataframe of points with
 columns 'lon' and 'lat'. Must contain a "depth" column. If NULL, then
 contours must be provided.
 If NULL, then contours must be provided.}
@@ -38,7 +38,9 @@ provided.}
 
 \item{crs}{target coordinate reference system: object of class \code{crs}, or input string for \link[sf]{st_crs}}
 
-\item{method}{character interpolation method. Options are 'MBA' (default),}
+\item{method}{character interpolation method. Options are nearest neighbour
+('nn') (default), multilevel B-splines ('MBA'), thin plate spline ('tps'),
+and inverse distance weighting ('idw').}
 
 \item{print_plot}{logical print plot of interpolated raster.}
 
@@ -65,9 +67,9 @@ Generate depth points for interpolation
 \examples{
 shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
 package = "bathytools"))
-point_data <- readRDS(system.file("extdata/depth_points.rds",
+depth_points <- readRDS(system.file("extdata/depth_points.rds",
 package = "bathytools"))
-bathy <- rasterise_bathy(shoreline = shoreline, point_data = point_data,
+bathy <- rasterise_bathy(shoreline = shoreline, depth_points = depth_points,
 crs = 2193)
 
 }

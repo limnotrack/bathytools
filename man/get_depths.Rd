@@ -4,7 +4,7 @@
 \alias{get_depths}
 \title{Get depths for hypsograph or contours}
 \usage{
-get_depths(bathy_raster, surface = 0, depths)
+get_depths(bathy_raster, surface = 0, depths = NULL)
 }
 \arguments{
 \item{bathy_raster}{SpatRaster object with the bathymetry data.}
@@ -15,7 +15,9 @@ get_depths(bathy_raster, surface = 0, depths)
 numeric value is provided, the function will calculate the area at each depth
 from the surface to the minimum depth of the bathymetry raster at intervals of
 the provided value. If a vector of numeric values is provided, the function
-will calculate the area at each depth specified in the vector. Default is 1.}
+will calculate the area at each depth specified in the vector. if \code{NULL}, the
+function will use the default depths from the model layer structure. Default
+is \code{NULL}.}
 }
 \value{
 numeric

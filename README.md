@@ -12,9 +12,9 @@ coverage](https://codecov.io/gh/limnotrack/bathytools/graph/badge.svg)](https://
 
 The goal of bathytools is to facilitate the generation of bathymetric
 data for lakes and reservoirs. The package provides functions to
-generate depth points from bathymetric data, and to rasterise these
-points into a bathymetric raster. The package is designed to work with
-data from the AEME project, but can be used with any bathymetric data.
+rasterise point depth data into a bathymetric raster. The package is
+designed to work with data from the AEME project, but can be used with
+any bathymetric data.
 
 ## Development
 
@@ -42,15 +42,15 @@ library(bathytools)
 ## basic example code
 shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
                                  package = "bathytools"))
-point_data <- readRDS(system.file("extdata/depth_points.rds",
+depth_points <- readRDS(system.file("extdata/depth_points.rds",
                                   package = "bathytools"))
-bathy <- rasterise_bathy(shoreline = shoreline, point_data = point_data,
+bathy <- rasterise_bathy(shoreline = shoreline, depth_points = depth_points,
                          crs = 2193)
-#> Generating depth points... [2024-09-18 15:27:27]
-#> Finished! [2024-09-18 15:27:27]
-#> Interpolating to raster... [2024-09-18 15:27:27]
-#> Adjusting depths >= 0
-#> Finished! [2024-09-18 15:27:49]
+#> Generating depth points... [2025-09-15 12:08:23]
+#> Finished! [2025-09-15 12:08:23]
+#> Interpolating to raster... [2025-09-15 12:08:23]
+#> Adjusting depths >= 0 to  -0.82 m
+#> Finished! [2025-09-15 12:08:31]
 ```
 
 <img src="man/figures/README-example-1.png" width="100%" />

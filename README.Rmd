@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/limnotrack/bathytools/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/limnotrack/bathytools/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of bathytools is to facilitate the generation of bathymetric data for lakes and reservoirs. The package provides functions to generate depth points from bathymetric data, and to rasterise these points into a bathymetric raster. The package is designed to work with data from the AEME project, but can be used with any bathymetric data.
+The goal of bathytools is to facilitate the generation of bathymetric data for lakes and reservoirs. The package provides functions to rasterise point depth data into a bathymetric raster. The package is designed to work with data from the AEME project, but can be used with any bathymetric data.
 
 ## Development
 
@@ -44,8 +44,8 @@ library(bathytools)
 ## basic example code
 shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
                                  package = "bathytools"))
-point_data <- readRDS(system.file("extdata/depth_points.rds",
+depth_points <- readRDS(system.file("extdata/depth_points.rds",
                                   package = "bathytools"))
-bathy <- rasterise_bathy(shoreline = shoreline, point_data = point_data,
+bathy <- rasterise_bathy(shoreline = shoreline, depth_points = depth_points,
                          crs = 2193)
 ```
