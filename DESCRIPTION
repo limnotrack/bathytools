@@ -26,7 +26,8 @@ Suggests:
     rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-URL: https://limnotrack.com/bathytools/
+URL: https://limnotrack.com/bathytools/, https://github.com/limnotrack/bathytools
+BugReports: https://github.com/limnotrack/bathytools/issues
 VignetteBuilder: knitr
 Depends: 
     R (>= 3.5)
