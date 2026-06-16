@@ -30,6 +30,9 @@ rasterise_bathy <- function(shoreline, islands = NULL, point_data = NULL,
   bathy <- interpolate_points(point_data = all, shoreline = shoreline,
                               res = res, method = method, n = n, m = m, h = h,
                               crs = crs, print_plot = print_plot)
+  if (!is.null(islands)) {
+    bathy <- terra::mask(bathy, islands, inverse = TRUE)
+  }
   return(bathy)
 }
 
