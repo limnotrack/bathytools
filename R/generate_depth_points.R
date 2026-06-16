@@ -49,6 +49,19 @@ generate_depth_points <- function(shoreline, islands = NULL, point_data = NULL,
 
   if (!is.null(islands)) {
     # Add handler for islands
+    lstring <- islands$geometry |>
+      sf::st_cast("MULTILINESTRING") |>
+      sf::st_cast("LINESTRING") |>
+      sf::st_as_sf()
+
+    p <- line_to_points(lstring$x, res) |>
+      # sf::st_cast("POINT") |>
+      sf::st_as_sf() |>
+      dplyr::mutate(depth = 0) |>
+      dplyr::rename(geometry = x)
+    p <- p[!sf::st_is_empty(p$geometry), ] |>
+      sf::st_cast("POINT")
+    island_pts <- p
 
   }
 
@@ -284,6 +297,9 @@ generate_depth_points <- function(shoreline, islands = NULL, point_data = NULL,
     point_data <- cont_pnts
   } else if (!is.null(point_data)) {
     point_data <- pts
+  }
+  if (!is.null(islands)) {
+    point_data <- dplyr::bind_rows(point_data, island_pts)
   }
 
   # Generate an outline of the lake as points for interpolation ----
