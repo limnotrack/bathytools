@@ -9,6 +9,9 @@
 
 ## Citation
 
+Source:
+[`DESCRIPTION`](https://github.com/limnotrack/bathytools/blob/main/DESCRIPTION)
+
 Moore T, McBride C (2026). *bathytools: Tools to handle bathymetric
 data*. R package version 0.0.0.9000,
 <https://limnotrack.com/bathytools/>.
