@@ -34,7 +34,7 @@ bathy_to_hypso <- function(bathy_raster, surface = 0, depths = NULL) {
   mm <- terra::minmax(bathy_raster)
   # If minimum depth is less than 0, then we need to adjust the output depths to
   # negative
-  if (mm[2] < 0) {
+  if (mm[1] < 0) {
     depth_out <- -depth_out
   }
 

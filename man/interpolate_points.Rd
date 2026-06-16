@@ -10,7 +10,7 @@ interpolate_points(
   islands = NULL,
   crs,
   res = 2,
-  method = "nn",
+  method = c("MBA", "tps", "nn", "idw"),
   n = 1,
   m = 1,
   h = 8,

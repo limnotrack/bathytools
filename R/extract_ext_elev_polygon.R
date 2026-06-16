@@ -6,7 +6,7 @@
 #' @return sf object with the largest polygon connected to the lake.
 #' @noRd
 #' @importFrom terra clamp ifel as.polygons disagg subset relate vect project 
-#' crs
+#' @importFrom terra crs
 #' @importFrom sf st_as_sf st_cast st_intersects
 #' @importFrom dplyr filter
 extract_ext_elev_polygon <- function(dem_bath, shoreline, lake_elev, ext_elev) {

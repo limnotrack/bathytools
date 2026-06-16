@@ -20,7 +20,7 @@ plot_raster_3d(
 \arguments{
 \item{x}{SpatRaster object}
 
-\item{fact}{positive integer. Aggregation factor expressed as number of cells in each direction (horizontally and vertically). Or two integers (horizontal and vertical aggregation factor) or three integers (when also aggregating over layers)}
+\item{fact}{positive integer. Aggregation factor expressed as number of cells in each direction (horizontally and vertically). Or two integers (vertical (fact[1]) and horizontal (fact[2]) aggregation factor) or three integers (when also aggregating over layers)}
 
 \item{mask_to_lake}{logical, mask the raster to the lake. Default is FALSE.}
 

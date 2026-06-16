@@ -471,7 +471,7 @@ calc_lake_morphometry <- function(bathy_raster,
 #'   the output.
 #' @export
 #' @importFrom parallel makeCluster parLapply stopCluster clusterExport 
-#' clusterEvalQ detectCores
+#' @importFrom parallel clusterEvalQ detectCores
 #' @importFrom sf st_as_sf st_perimeter st_bbox
 #' @examples
 #' \dontrun{

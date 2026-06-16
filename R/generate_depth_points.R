@@ -13,7 +13,8 @@
 #' @inheritParams sf::st_transform
 #'
 #' @importFrom sf st_cast st_length st_area st_transform st_intersection st_crs
-#' st_sample st_as_sf st_buffer st_line_sample st_make_valid st_is_empty
+#' @importFrom sf st_sample st_as_sf st_buffer st_line_sample st_make_valid 
+#' @importFrom sf st_is_empty
 #' @importFrom units set_units drop_units
 #' @importFrom dplyr group_by filter mutate select bind_rows sample_n
 #'
