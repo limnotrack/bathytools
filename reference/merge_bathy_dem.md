@@ -61,15 +61,15 @@ package = "bathytools"))
 bathy_raster <- rasterise_bathy(shoreline = shoreline,
 depth_points = depth_points, crs = 2193)
 #> ℹ Generating depth points for interpolation
-#> Generating depth points... [2026-06-16 04:27:33]
-#> Finished! [2026-06-16 04:27:33]
-#> ✔ Generating depth points for interpolation [187ms]
+#> Generating depth points... [2026-06-16 04:40:29]
+#> Finished! [2026-06-16 04:40:30]
+#> ✔ Generating depth points for interpolation [195ms]
 #> 
 #> ℹ Interpolating depth points to raster
 #> Adjusting depths >= 0 to  -0.81 m
-#> Finished! [2026-06-16 04:29:37]
+#> Finished! [2026-06-16 04:42:36]
 
-#> ✔ Interpolating depth points to raster [2m 4.6s]
+#> ✔ Interpolating depth points to raster [2m 6.6s]
 #> 
 dem_raster <- terra::rast(system.file("extdata/dem_32m.tif",
 package = "bathytools"))
