@@ -37,6 +37,7 @@
   raster with a DEM raster
 - [`model_layer_structure`](model_layer_structure.md) : Reference data
   frame for model layer structure.
+- [`plot_bathy_3d()`](plot_bathy_3d.md) : Plot a 3D raster
 - [`plot_raster_3d()`](plot_raster_3d.md) : Plot a 3D raster
 - [`rasterise_bathy()`](rasterise_bathy.md) : Generate depth points for
   interpolation

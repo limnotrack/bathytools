@@ -51,15 +51,15 @@ package = "bathytools"))
 bathy_raster <- rasterise_bathy(shoreline = shoreline,
 depth_points = depth_points, crs = 2193)
 #> ℹ Generating depth points for interpolation
-#> Generating depth points... [2026-06-16 03:29:57]
-#> Finished! [2026-06-16 03:29:57]
-#> ✔ Generating depth points for interpolation [185ms]
+#> Generating depth points... [2026-06-16 04:12:03]
+#> Finished! [2026-06-16 04:12:03]
+#> ✔ Generating depth points for interpolation [195ms]
 #> 
 #> ℹ Interpolating depth points to raster
 #> Adjusting depths >= 0 to  -0.81 m
-#> Finished! [2026-06-16 03:31:58]
+#> Finished! [2026-06-16 04:14:08]
 
-#> ✔ Interpolating depth points to raster [2m 2s]
+#> ✔ Interpolating depth points to raster [2m 5.6s]
 #> 
 calculate_lake_volume(bathy_raster = bathy_raster)
 #> [1] 435637277
