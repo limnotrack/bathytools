@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# bathytools
+# bathytools <img src="man/figures/logo.png" align="right" height="120" alt="" />
 
 <!-- badges: start -->
 
@@ -46,11 +46,13 @@ depth_points <- readRDS(system.file("extdata/depth_points.rds",
                                   package = "bathytools"))
 bathy <- rasterise_bathy(shoreline = shoreline, depth_points = depth_points,
                          crs = 2193)
-#> Generating depth points... [2025-09-15 12:08:23]
-#> Finished! [2025-09-15 12:08:23]
-#> Interpolating to raster... [2025-09-15 12:08:23]
-#> Adjusting depths >= 0 to  -0.82 m
-#> Finished! [2025-09-15 12:08:31]
+#> ℹ Generating depth points for interpolationGenerating depth points... [2026-06-16 16:16:21]
+#> Finished! [2026-06-16 16:16:21]
+#> ✔ Generating depth points for interpolation [370ms]
+#> ℹ Interpolating depth points to rasterAdjusting depths >= 0 to  -0.81 m
+#> Finished! [2026-06-16 16:17:48]
 ```
 
-<img src="man/figures/README-example-1.png" width="100%" />
+<img src="man/figures/README-example-1.png" alt="" width="100%" />
+
+    #> ✔ Interpolating depth points to raster [1m 28.3s]
