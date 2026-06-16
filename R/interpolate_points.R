@@ -29,10 +29,12 @@
 #'
 
 interpolate_points <- function(depth_points, shoreline, islands = NULL, crs,
-                               res = 2, method = "nn", n = 1, m = 1, h = 8,
+                               res = 2, method = c("MBA", "tps", "nn", "idw"),
+                               n = 1, m = 1, h = 8,
                                print_plot = TRUE) {
 
-  message("Interpolating to raster... [", format(Sys.time()), "]")
+  method <- rlang::arg_match(method)
+  # message("Interpolating to raster... [", format(Sys.time()), "]")
 
   # Convert points to a data.frame
   coords <- depth_points |>
