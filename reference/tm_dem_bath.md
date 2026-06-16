@@ -13,15 +13,12 @@ tm_dem_bath(dem_bath, lake_elev, ext_elev = 0)
 - dem_bath:
 
   SpatRaster object with merged DEM and bathymetry data. Can be
-  generated using the
-  [merge_bathy_dem](https://limnotrack.github.io/bathytools/reference/merge_bathy_dem.md)
-  function.
+  generated using the [merge_bathy_dem](merge_bathy_dem.md) function.
 
 - lake_elev:
 
   numeric, elevation of the lake surface. Can be extracted using the
-  [get_lake_surface_elevation](https://limnotrack.github.io/bathytools/reference/get_lake_surface_elevation.md)
-  function.
+  [get_lake_surface_elevation](get_lake_surface_elevation.md) function.
 
 - ext_elev:
 

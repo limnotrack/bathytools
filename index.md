@@ -18,6 +18,7 @@ website](reference/figures/limnotrack_border.jpg)](http://limnotrack.com/)
 You can install the development version of bathytools from GitHub with:
 
 ``` r
+
 # install.packages("pak")
 pak::pak("limnotrack/bathytools")
 ```
@@ -28,6 +29,7 @@ This is a basic example which shows you how to generate a bathymetric
 raster from a shoreline and depth points:
 
 ``` r
+
 library(bathytools)
 ## basic example code
 shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",

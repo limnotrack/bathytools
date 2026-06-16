@@ -10,8 +10,7 @@ surrounding area.
 
 This vignette demonstrates how to merge bathymetry data with a Digital
 Elevation Model (DEM) raster using the
-[`merge_bathy_dem()`](https://limnotrack.github.io/bathytools/reference/merge_bathy_dem.md)
-function.
+[`merge_bathy_dem()`](../reference/merge_bathy_dem.md) function.
 
 ## Load the data
 
@@ -31,11 +30,13 @@ Zealand](https://www.doc.govt.nz/our-work/freshwater-ecosystems-of-new-zealand/)
 database.
 
 ``` r
+
 library(bathytools)
 library(tmap) # Used for plotting spatial data
 ```
 
 ``` r
+
 shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
                                  package = "bathytools"))
 catchment <- readRDS(system.file("extdata/rotoma_catchment.rds",
@@ -55,6 +56,7 @@ package, but is specifically designed for spatial data. Here we plot the
 lake shoreline in light blue and the lake catchment in pink.
 
 ``` r
+
 tmap_mode("view")
 #> ℹ tmap modes "plot" - "view"
 #> ℹ toggle with `tmap::ttm()`
@@ -73,6 +75,7 @@ data.frame in an .rds file within the package. Here we show the first
 few rows of the depth data.
 
 ``` r
+
 point_data <- readRDS(system.file("extdata/depth_points.rds",
                                   package = "bathytools"))
 head(point_data)
@@ -86,6 +89,7 @@ head(point_data)
 ```
 
 ``` r
+
 dem_raster <- terra::rast(system.file("extdata/dem_32m.tif",
                                       package = "bathytools"))
 tm_shape(dem_raster) +
@@ -94,15 +98,12 @@ tm_shape(dem_raster) +
   tm_borders(col = "#FC8D62", lwd = 2) +
   tm_shape(catchment) +
   tm_borders(col = "#A6D854", lwd = 2) 
-#> Warning: tm_scale_intervals `label.style = "continuous"` implementation in view mode
-#> work in progress
 ```
 
 ## Generate the bathymetry raster
 
 The first step is to generate a bathymetry raster from the shoreline and
-depth data. The
-[`rasterise_bathy()`](https://limnotrack.github.io/bathytools/reference/rasterise_bathy.md)
+depth data. The [`rasterise_bathy()`](../reference/rasterise_bathy.md)
 function is used to generate the bathymetry raster. The function takes
 the shoreline, depth data, and the coordinate reference system (CRS) as
 inputs. The function returns a `SpatRaster` object representing the
@@ -110,19 +111,21 @@ bathymetry raster.
 
 ``` r
 
+
 bathy_raster <- rasterise_bathy(shoreline = shoreline,
                                 depth_points = point_data, crs = 2193,
                                 res = 8)
-#> Generating depth points... [2026-03-09 22:37:43]
-#> Finished! [2026-03-09 22:37:43]
-#> Interpolating to raster... [2026-03-09 22:37:43]
+#> Generating depth points... [2026-06-16 03:25:20]
+#> Finished! [2026-06-16 03:25:20]
+#> Interpolating to raster... [2026-06-16 03:25:20]
 #> Adjusting depths >= 0 to  -0.81 m
-#> Finished! [2026-03-09 22:37:59]
+#> Finished! [2026-06-16 03:25:39]
 ```
 
 ![](merge-bathy-dem_files/figure-html/generate-bathy-raster-1.png)
 
 ``` r
+
 tm_shape(dem_raster) +
   tm_raster(col_alpha = 0.5, 
             col.scale = tm_scale_continuous(values = "-brewer.yl_gn_bu")) +
@@ -132,20 +135,16 @@ tm_shape(dem_raster) +
   tm_borders(col = "#FC8D62", lwd = 2) +
   tm_shape(catchment) +
   tm_borders(col = "#A6D854", lwd = 2) 
-#> Warning: tm_scale_intervals `label.style = "continuous"` implementation in view mode
-#> work in progress
-#> tm_scale_intervals `label.style = "continuous"` implementation in view mode
-#> work in progress
 ```
 
 ## Merge the bathymetry with the DEM
 
 The next step is to merge the bathymetry raster with the DEM raster. The
-[`merge_bathy_dem()`](https://limnotrack.github.io/bathytools/reference/merge_bathy_dem.md)
-function is used to merge the bathymetry raster with the DEM raster. The
-function takes the shoreline, bathymetry raster, DEM raster, and
-catchment shapefile as inputs. The function returns a `SpatRaster`
-object representing the merged bathymetry and DEM data.
+[`merge_bathy_dem()`](../reference/merge_bathy_dem.md) function is used
+to merge the bathymetry raster with the DEM raster. The function takes
+the shoreline, bathymetry raster, DEM raster, and catchment shapefile as
+inputs. The function returns a `SpatRaster` object representing the
+merged bathymetry and DEM data.
 
 If the resolution of the bathymetry raster is different from the DEM
 raster, the bathymetry raster will be resampled to match the resolution
@@ -153,21 +152,22 @@ of the DEM raster.
 
 ``` r
 
+
 dem_bath <- merge_bathy_dem(shoreline = shoreline, bathy_raster = bathy_raster,
                             dem_raster = dem_raster, catchment = catchment)
 #> Resolutions differ. Resampling bathy_raster to DEM resolution.
 #> Lake surface elevation from DEM: 313.3 m
 dem_bath
-#> class       : SpatRaster 
+#> class       : SpatRaster
 #> size        : 217, 194, 1  (nrow, ncol, nlyr)
 #> resolution  : 32, 32  (x, y)
 #> extent      : 1911744, 1917952, 5779472, 5786416  (xmin, xmax, ymin, ymax)
-#> coord. ref. : NZGD2000 / New Zealand Transverse Mercator 2000 (EPSG:2193) 
+#> coord. ref. : NZGD2000 / New Zealand Transverse Mercator 2000 (EPSG:2193)
 #> source(s)   : memory
-#> varname     : dem_32m 
-#> name        : elevation 
-#> min value   :  232.8289 
-#> max value   :  599.1376
+#> varname     : dem_32m
+#> name        :  elevation
+#> min value   :  232.82887
+#> max value   : 599.137573
 ```
 
 ### Spatial plot of the merged raster
@@ -175,6 +175,7 @@ dem_bath
 Here we plot the merged raster with the lake and catchment boundaries.
 
 ``` r
+
 tm_shape(dem_bath) +
   tm_raster(col_alpha = 0.5, 
             col.scale = tm_scale_continuous(values = "-brewer.yl_gn_bu")) +
@@ -182,18 +183,17 @@ tm_shape(dem_bath) +
   tm_borders(col = "#FC8D62", lwd = 2) +
   tm_shape(catchment) +
   tm_borders(col = "#A6D854", lwd = 2) 
-#> Warning: tm_scale_intervals `label.style = "continuous"` implementation in view mode
-#> work in progress
 ```
 
 The colours in this plot do not clearly distinguish between the
 bathymetry and DEM data. We will add a break at the surface elevation of
 the lake to better distinguish between the two datasets. We can extract
 the water surface elevation from the DEM data using the
-[`get_lake_surface_elevation()`](https://limnotrack.github.io/bathytools/reference/get_lake_surface_elevation.md)
+[`get_lake_surface_elevation()`](../reference/get_lake_surface_elevation.md)
 function.
 
 ``` r
+
 lake_elev <- get_lake_surface_elevation(dem_raster = dem_raster,
                                         shoreline = shoreline)
 #> Lake surface elevation from DEM: 313.3 m
@@ -203,20 +203,20 @@ We can now plot the merged raster with the lake surface elevation as the
 break in the colour palette.
 
 ``` r
+
 tm_dem_bath(dem_bath = dem_bath, lake_elev = lake_elev)
-#> Warning: tm_scale_intervals `label.style = "continuous"` implementation in view mode
-#> work in progress
 ```
 
 ### Hypsograph of the merged raster
 
 A hypsograph is a plot of the area of a lake at different depths. The
-[`bathy_to_hypso()`](https://limnotrack.github.io/bathytools/reference/bathy_to_hypso.md)
-function can be used to generate a hypsograph from the bathymetry
-raster. The function takes the bathymetry raster as input and returns a
-data frame with the depth and area at each depth.
+[`bathy_to_hypso()`](../reference/bathy_to_hypso.md) function can be
+used to generate a hypsograph from the bathymetry raster. The function
+takes the bathymetry raster as input and returns a data frame with the
+depth and area at each depth.
 
 ``` r
+
 
 hyps <- bathy_to_hypso(bathy_raster = bathy_raster)
 head(hyps)
@@ -233,6 +233,7 @@ The hypsograph can be plotted to show the area of the lake at different
 depths.
 
 ``` r
+
 library(ggplot2)
 
 ggplot(hyps, aes(x = area, y = depth)) +
@@ -260,6 +261,7 @@ elevations above the lake surface.
 
 ``` r
 
+
 lake_depth <- get_lake_depth(bathy_raster = bathy_raster)
 ext_hyps <- dem_to_hypsograph(shoreline = shoreline, dem_bath = dem_bath, 
                               lake_elev = lake_elev, lake_depth = lake_depth,
@@ -269,6 +271,7 @@ ext_hyps <- dem_to_hypsograph(shoreline = shoreline, dem_bath = dem_bath,
 ![](merge-bathy-dem_files/figure-html/ext-hypsograph-1.png)
 
 ``` r
+
 head(ext_hyps)
 #>    elev depth     area
 #> 1 316.3   3.0 11935744
@@ -285,6 +288,7 @@ at different elevations above the lake surface.
 
 ``` r
 
+
 ggplot(ext_hyps, aes(x = area, y = elev)) +
   geom_hline(yintercept = lake_elev, linetype = "dashed", color = "red") +
   geom_line() +
@@ -297,14 +301,14 @@ ggplot(ext_hyps, aes(x = area, y = elev)) +
 
 ### 3-D plot of the merged raster
 
-The
-[`plot_raster_3d()`](https://limnotrack.github.io/bathytools/reference/plot_raster_3d.md)
-function can be used to create a 3-D plot of the merged raster. The
-function takes the merged raster and the shoreline as inputs. The `fact`
-argument controls the aggregation factor for the raster. A higher factor
-will result in a smoother plot, but will take longer to render.
+The [`plot_raster_3d()`](../reference/plot_raster_3d.md) function can be
+used to create a 3-D plot of the merged raster. The function takes the
+merged raster and the shoreline as inputs. The `fact` argument controls
+the aggregation factor for the raster. A higher factor will result in a
+smoother plot, but will take longer to render.
 
 ``` r
+
 p1 <- plot_raster_3d(x = dem_bath, shoreline = shoreline, split_lake = TRUE)
 p1
 ```
@@ -321,5 +325,6 @@ files. They can also be quite large, so it is recommended to save the
 raster in a compressed format, such as GeoTIFF.
 
 ``` r
+
 terra::writeRaster(dem_bath, "dem_bath.tif", overwrite = TRUE)
 ```

@@ -1,9 +1,8 @@
 # Apply calc_lake_morphometry to a named list of SpatRasters
 
-Iterates
-[`calc_lake_morphometry()`](https://limnotrack.github.io/bathytools/reference/calc_lake_morphometry.md)
-over a named list of bathymetric rasters and returns results as a single
-tidy `data.frame` with one row per lake.
+Iterates [`calc_lake_morphometry()`](calc_lake_morphometry.md) over a
+named list of bathymetric rasters and returns results as a single tidy
+`data.frame` with one row per lake.
 
 Parallel execution is supported via the parallel package (base R). When
 `parallel = TRUE` the function creates a PSOCK cluster with `n_cores`
@@ -65,7 +64,7 @@ batch_lake_morphometry(
 - ...:
 
   Additional arguments passed to
-  [`calc_lake_morphometry()`](https://limnotrack.github.io/bathytools/reference/calc_lake_morphometry.md).
+  [`calc_lake_morphometry()`](calc_lake_morphometry.md).
 
 ## Value
 

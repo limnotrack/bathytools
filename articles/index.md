@@ -2,5 +2,4 @@
 
 ### All vignettes
 
-- [Merge Bathymetry with DEM
-  data](https://limnotrack.github.io/bathytools/articles/merge-bathy-dem.md):
+- [Merge Bathymetry with DEM data](merge-bathy-dem.md):

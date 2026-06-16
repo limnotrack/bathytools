@@ -11,12 +11,12 @@
 
 Moore T, McBride C (2026). *bathytools: Tools to handle bathymetric
 data*. R package version 0.0.0.9000,
-<https://limnotrack.github.io/bathytools/>.
+<https://limnotrack.com/bathytools/>.
 
     @Manual{,
       title = {bathytools: Tools to handle bathymetric data},
       author = {Tadhg Moore and Chris McBride},
       year = {2026},
       note = {R package version 0.0.0.9000},
-      url = {https://limnotrack.github.io/bathytools/},
+      url = {https://limnotrack.com/bathytools/},
     }
