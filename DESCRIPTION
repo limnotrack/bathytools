@@ -10,7 +10,6 @@ Description: Generate bathymetry raster files from survey data and merge with
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 Imports: 
     cli,
     dplyr,
@@ -27,8 +26,9 @@ Suggests:
     rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-URL: https://limnotrack.github.io/bathytools/
+URL: https://limnotrack.com/bathytools/
 VignetteBuilder: knitr
 Depends: 
     R (>= 3.5)
 LazyData: true
+Config/roxygen2/version: 8.0.0
