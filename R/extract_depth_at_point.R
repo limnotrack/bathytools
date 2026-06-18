@@ -52,8 +52,8 @@
 #'
 #' @export
 #'
-#' @importFrom terra extract crs vect ext intersect
-#' @importFrom sf st_as_sf st_coordinates st_crs st_transform st_distance st_nearest_feature st_geometry_type st_bbox st_intersects
+#' @importFrom terra extract crs vect ext
+#' @importFrom sf st_as_sf st_coordinates st_crs st_transform st_distance st_nearest_feature st_geometry_type st_bbox
 #' @importFrom units drop_units
 #' @importFrom cli cli_inform cli_warn cli_abort
 #'
