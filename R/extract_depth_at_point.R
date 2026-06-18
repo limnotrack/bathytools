@@ -212,6 +212,12 @@ extract_depth_at_point <- function(x,
       
       # Get n nearest neighbors
       n_use <- min(n_neighbors, sum(within_dist))
+      
+      # Ensure we have at least one neighbor
+      if (n_use == 0) {
+        return(NA_real_)
+      }
+      
       nearest_indices <- order(distances)[1:n_use]
       nearest_distances <- distances[nearest_indices]
       

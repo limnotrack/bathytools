@@ -76,6 +76,7 @@ test_that("extract depth from point data works", {
                                             method = "idw",
                                             n_neighbors = 5)
   # When point is exactly at a data point, should return that exact depth
+  # Use tight tolerance since distance is exactly 0 (no rounding errors expected)
   testthat::expect_equal(depth_idw_exact, depth_points$depth[1],
                         tolerance = 1e-10)
 })
