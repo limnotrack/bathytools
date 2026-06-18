@@ -108,10 +108,6 @@ test_that("extract depth from contours works", {
   contours <- readRDS(system.file("extdata/depth_contours.rds",
                                   package = "bathytools"))
   
-  depth_points_sf <- depth_points |> 
-    sf::st_as_sf(coords = c("lon", "lat"), crs = 4326) |> 
-    sf::st_transform(2193)
-  
   pnt <- shoreline |> 
     sf::st_sample(size = 1)
   x <- pnt |> 
@@ -156,9 +152,6 @@ test_that("input validation works", {
                                    package = "bathytools"))
   depth_points <- readRDS(system.file("extdata/depth_points.rds",
                                     package = "bathytools"))
-  depth_points_sf <- depth_points |> 
-    sf::st_as_sf(coords = c("lon", "lat"), crs = 4326) |> 
-    sf::st_transform(2193)
   
   bathy <- rasterise_bathy(shoreline = shoreline, depth_points = depth_points,
                            crs = 2193, res = 8)
@@ -189,6 +182,9 @@ test_that("input validation works", {
   )
   
   # Test error when depth_points lacks depth column
+  depth_points_sf <- depth_points |> 
+    sf::st_as_sf(coords = c("lon", "lat"), crs = 4326) |> 
+    sf::st_transform(2193)
   points_no_depth <- depth_points_sf
   points_no_depth$depth <- NULL
   testthat::expect_error(
