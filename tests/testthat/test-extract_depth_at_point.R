@@ -46,42 +46,50 @@ test_that("extract depth from point data works", {
                                     package = "bathytools"))
   
   # Get a coordinate from the point data
-  coords <- sf::st_coordinates(depth_points[1, ])
+  coords <- depth_points[1, ] |> 
+    sf::st_as_sf(coords = c("lon", "lat"), crs = 4326)
   
   # Test nearest neighbor extraction
-  depth_nearest <- suppressMessages(extract_depth_at_point(x = c(coords[1], coords[2]),
+  depth_nearest <- suppressMessages(extract_depth_at_point(x = coords,
                                                             depth_points = depth_points,
-                                                            crs = sf::st_crs(depth_points),
+                                                            # crs = sf::st_crs(depth_points),
                                                             method = "nearest"))
   testthat::expect_type(depth_nearest, "double")
   testthat::expect_equal(depth_nearest, depth_points$depth[1])
   
   # Test with max_dist constraint that should return NA
-  depth_na <- suppressMessages(
-    testthat::expect_warning(
-      extract_depth_at_point(x = c(coords[1] + 10000, coords[2] + 10000),
-                            depth_points = depth_points,
-                            crs = sf::st_crs(depth_points),
-                            method = "nearest",
-                            max_dist = 100),
-      "exceeding max_dist"
-    )
+  coords2 <- depth_points[1, ] |> 
+    dplyr::mutate(lat = lat + 0.2) |> 
+    sf::st_as_sf(coords = c("lon", "lat"), crs = 4326)
+  # This captures the warning but allows the assignment of the actual return value to happen
+  testthat::expect_warning(
+    depth_na <- extract_depth_at_point(
+      x = coords2,
+      depth_points = depth_points,
+      method = "nearest",
+      max_dist = 100
+    ),
+    "exceeding max_dist"
   )
+  
+  # Now depth_na will be NA, and you can test it:
   testthat::expect_true(is.na(depth_na))
   
   # Test IDW method
-  depth_idw <- suppressMessages(extract_depth_at_point(x = c(coords[1] + 10, coords[2] + 10),
+  coords3 <- depth_points[1, ] |> 
+    dplyr::mutate(lat = lat + 0.002, lon = lon - 0.001) |> 
+    sf::st_as_sf(coords = c("lon", "lat"), crs = 4326)
+  
+  depth_idw <- suppressMessages(extract_depth_at_point(x = coords3,
                                                         depth_points = depth_points,
-                                                        crs = sf::st_crs(depth_points),
                                                         method = "idw",
                                                         n_neighbors = 5))
   testthat::expect_type(depth_idw, "double")
   testthat::expect_true(!is.na(depth_idw))
   
   # Test IDW with point at exact location (should return exact value without interpolation)
-  depth_idw_exact <- suppressMessages(extract_depth_at_point(x = c(coords[1], coords[2]),
+  depth_idw_exact <- suppressMessages(extract_depth_at_point(x = coords,
                                                               depth_points = depth_points,
-                                                              crs = sf::st_crs(depth_points),
                                                               method = "idw",
                                                               n_neighbors = 5))
   # When point is exactly at a data point, should return that exact depth
@@ -230,19 +238,23 @@ test_that("boundary checks work correctly", {
   outside_point <- c(raster_ext[1] - 1000, raster_ext[3] - 1000)
   
   testthat::expect_warning(
-    result <- extract_depth_at_point(x = outside_point, bathy_raster = bathy, crs = 2193),
+    result <- extract_depth_at_point(x = outside_point, bathy_raster = bathy,
+                                     crs = 2193),
     "outside the bathymetry raster extent"
   )
   testthat::expect_true(is.na(result))
   
   # Test point outside depth points extent with warning
-  depth_bbox <- sf::st_bbox(depth_points)
+  depth_bbox <- depth_points |>
+    sf::st_as_sf(coords = c("lon", "lat"), crs = 4326) |>
+    sf::st_transform(2193) |>
+    sf::st_bbox()
   outside_point2 <- c(depth_bbox["xmin"] - 1000, depth_bbox["ymin"] - 1000)
   
   testthat::expect_warning(
     suppressMessages(extract_depth_at_point(x = outside_point2, 
                                             depth_points = depth_points,
-                                            crs = sf::st_crs(depth_points))),
+                                            crs = 2193)),
     "outside the extent of depth points"
   )
   
@@ -283,11 +295,10 @@ test_that("cli messages are generated correctly", {
   )
   
   # Test that informational messages are generated for point extraction
-  coords <- sf::st_coordinates(depth_points[1, ])
+  coords <- depth_points[1, ] |> unlist()
   testthat::expect_message(
     extract_depth_at_point(x = c(coords[1], coords[2]),
-                          depth_points = depth_points,
-                          crs = sf::st_crs(depth_points)),
+                          depth_points = depth_points, crs = 4326),
     "Extracting depth from point data"
   )
 })
