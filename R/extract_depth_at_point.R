@@ -5,6 +5,16 @@
 #' If multiple data sources are provided, the function will use them in the
 #' following priority order: bathymetry raster > point data > contours.
 #'
+#' The function performs boundary checks to verify that the point is within the
+#' extent of the data source before attempting extraction. For raster data, the
+#' function will return NA with a warning if the point is outside the raster extent.
+#' For point and contour data, the function will issue a warning but continue with
+#' the search, as points may still be found within the specified max_dist.
+#'
+#' The function uses the cli package to provide informative messages about the
+#' extraction method, boundary checks, and results, making it easier to understand
+#' what the function is doing.
+#'
 #' @param x numeric or sf POINT. Either a numeric vector of length 2 containing
 #'   the x and y coordinates (c(x, y)), or an sf POINT object. If numeric
 #'   coordinates are provided, the `crs` parameter must also be specified.
