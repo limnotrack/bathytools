@@ -5,9 +5,13 @@ test_that("extract depth from bathymetry raster works", {
                                     package = "bathytools"))
   bathy <- rasterise_bathy(shoreline = shoreline, depth_points = depth_points,
                            crs = 2193, res = 8)
+  x <- shoreline |> 
+    sf::st_point_on_surface() |> 
+    sf::st_coordinates() |> 
+    c()
   
   # Test extraction with numeric coordinates
-  depth <- extract_depth_at_point(x = c(2823700, 6404300),
+  depth <- extract_depth_at_point(x = x,
                                   bathy_raster = bathy,
                                   crs = 2193)
   testthat::expect_type(depth, "double")
@@ -15,21 +19,21 @@ test_that("extract depth from bathymetry raster works", {
   testthat::expect_true(depth <= 0)  # Depth should be negative or zero
   
   # Test extraction with bilinear method
-  depth_bilinear <- extract_depth_at_point(x = c(2823700, 6404300),
+  depth_bilinear <- extract_depth_at_point(x = x,
                                            bathy_raster = bathy,
                                            crs = 2193,
                                            method = "bilinear")
   testthat::expect_type(depth_bilinear, "double")
   
   # Test extraction with simple method
-  depth_simple <- extract_depth_at_point(x = c(2823700, 6404300),
+  depth_simple <- extract_depth_at_point(x = x,
                                          bathy_raster = bathy,
                                          crs = 2193,
                                          method = "simple")
   testthat::expect_type(depth_simple, "double")
   
   # Test with sf POINT object
-  point_sf <- sf::st_as_sf(data.frame(x = 2823700, y = 6404300),
+  point_sf <- sf::st_as_sf(data.frame(x = x[1], y = x[2]),
                            coords = c("x", "y"), crs = 2193)
   depth_sf <- extract_depth_at_point(x = point_sf,
                                      bathy_raster = bathy)
@@ -42,10 +46,10 @@ test_that("extract depth from point data works", {
                                     package = "bathytools"))
   
   # Get a coordinate from the point data
-  coords <- sf::st_coordinates(depth_points[1, ])
+  coords <- depth_points[1, ]
   
   # Test nearest neighbor extraction
-  depth_nearest <- extract_depth_at_point(x = c(coords[1], coords[2]),
+  depth_nearest <- extract_depth_at_point(x = c(coords[1, 1], coords[1, 2]),
                                           depth_points = depth_points,
                                           crs = sf::st_crs(depth_points),
                                           method = "nearest")
@@ -88,10 +92,21 @@ test_that("extract depth from contours works", {
                                     package = "bathytools"))
   bathy <- rasterise_bathy(shoreline = shoreline, depth_points = depth_points,
                            crs = 2193, res = 8)
-  contours <- get_contours(bathy_raster = bathy)
+  contours <- readRDS(system.file("extdata/depth_contours.rds",
+                                  package = "bathytools"))
+  
+  depth_points_sf <- depth_points |> 
+    sf::st_as_sf(coords = c("lon", "lat"), crs = 4326) |> 
+    sf::st_transform(2193)
+  
+  pnt <- shoreline |> 
+    sf::st_sample(size = 1)
+  x <- pnt |> 
+    sf::st_coordinates() |> 
+    c()
   
   # Test extraction from contours
-  depth_contour <- extract_depth_at_point(x = c(2823700, 6404300),
+  depth_contour <- extract_depth_at_point(x = x,
                                           contours = contours,
                                           crs = 2193,
                                           method = "nearest")
@@ -100,16 +115,17 @@ test_that("extract depth from contours works", {
   testthat::expect_true(depth_contour <= 0)  # Depth should be negative or zero
   
   # Test with very small max_dist - should likely return NA since point is not on contour
-  depth_na_small <- extract_depth_at_point(x = c(2823700, 6404300),
+  depth_na_small <- extract_depth_at_point(x = x,
                                            contours = contours,
                                            crs = 2193,
                                            method = "nearest",
                                            max_dist = 0.01)
   # Very restrictive distance likely results in NA, but verify it's numeric
   testthat::expect_type(depth_na_small, "double")
+  testthat::expect_true(is.na(depth_na_small))
   
   # Test with large max_dist - should return a valid depth
-  depth_large_dist <- extract_depth_at_point(x = c(2823700, 6404300),
+  depth_large_dist <- extract_depth_at_point(x = x,
                                              contours = contours,
                                              crs = 2193,
                                              method = "nearest",
@@ -123,6 +139,10 @@ test_that("input validation works", {
                                    package = "bathytools"))
   depth_points <- readRDS(system.file("extdata/depth_points.rds",
                                     package = "bathytools"))
+  depth_points_sf <- depth_points |> 
+    sf::st_as_sf(coords = c("lon", "lat"), crs = 4326) |> 
+    sf::st_transform(2193)
+  
   bathy <- rasterise_bathy(shoreline = shoreline, depth_points = depth_points,
                            crs = 2193, res = 8)
   
@@ -152,7 +172,7 @@ test_that("input validation works", {
   )
   
   # Test error when depth_points lacks depth column
-  points_no_depth <- depth_points
+  points_no_depth <- depth_points_sf
   points_no_depth$depth <- NULL
   testthat::expect_error(
     extract_depth_at_point(x = c(2823700, 6404300), depth_points = points_no_depth,
