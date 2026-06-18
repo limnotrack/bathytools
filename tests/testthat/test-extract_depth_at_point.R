@@ -10,33 +10,33 @@ test_that("extract depth from bathymetry raster works", {
     sf::st_coordinates() |> 
     c()
   
-  # Test extraction with numeric coordinates
-  depth <- extract_depth_at_point(x = x,
-                                  bathy_raster = bathy,
-                                  crs = 2193)
+  # Test extraction with numeric coordinates - suppress cli messages for clean tests
+  depth <- suppressMessages(extract_depth_at_point(x = x,
+                                                    bathy_raster = bathy,
+                                                    crs = 2193))
   testthat::expect_type(depth, "double")
   testthat::expect_true(is.numeric(depth))
   testthat::expect_true(depth <= 0)  # Depth should be negative or zero
   
   # Test extraction with bilinear method
-  depth_bilinear <- extract_depth_at_point(x = x,
-                                           bathy_raster = bathy,
-                                           crs = 2193,
-                                           method = "bilinear")
+  depth_bilinear <- suppressMessages(extract_depth_at_point(x = x,
+                                                             bathy_raster = bathy,
+                                                             crs = 2193,
+                                                             method = "bilinear"))
   testthat::expect_type(depth_bilinear, "double")
   
   # Test extraction with simple method
-  depth_simple <- extract_depth_at_point(x = x,
-                                         bathy_raster = bathy,
-                                         crs = 2193,
-                                         method = "simple")
+  depth_simple <- suppressMessages(extract_depth_at_point(x = x,
+                                                           bathy_raster = bathy,
+                                                           crs = 2193,
+                                                           method = "simple"))
   testthat::expect_type(depth_simple, "double")
   
   # Test with sf POINT object
   point_sf <- sf::st_as_sf(data.frame(x = x[1], y = x[2]),
                            coords = c("x", "y"), crs = 2193)
-  depth_sf <- extract_depth_at_point(x = point_sf,
-                                     bathy_raster = bathy)
+  depth_sf <- suppressMessages(extract_depth_at_point(x = point_sf,
+                                                       bathy_raster = bathy))
   testthat::expect_type(depth_sf, "double")
   testthat::expect_equal(depth_sf, depth_bilinear)
 })
@@ -46,39 +46,44 @@ test_that("extract depth from point data works", {
                                     package = "bathytools"))
   
   # Get a coordinate from the point data
-  coords <- depth_points[1, ]
+  coords <- sf::st_coordinates(depth_points[1, ])
   
   # Test nearest neighbor extraction
-  depth_nearest <- extract_depth_at_point(x = c(coords[1, 1], coords[1, 2]),
-                                          depth_points = depth_points,
-                                          crs = sf::st_crs(depth_points),
-                                          method = "nearest")
+  depth_nearest <- suppressMessages(extract_depth_at_point(x = c(coords[1], coords[2]),
+                                                            depth_points = depth_points,
+                                                            crs = sf::st_crs(depth_points),
+                                                            method = "nearest"))
   testthat::expect_type(depth_nearest, "double")
   testthat::expect_equal(depth_nearest, depth_points$depth[1])
   
   # Test with max_dist constraint that should return NA
-  depth_na <- extract_depth_at_point(x = c(coords[1] + 10000, coords[2] + 10000),
-                                     depth_points = depth_points,
-                                     crs = sf::st_crs(depth_points),
-                                     method = "nearest",
-                                     max_dist = 100)
+  depth_na <- suppressMessages(
+    testthat::expect_warning(
+      extract_depth_at_point(x = c(coords[1] + 10000, coords[2] + 10000),
+                            depth_points = depth_points,
+                            crs = sf::st_crs(depth_points),
+                            method = "nearest",
+                            max_dist = 100),
+      "exceeding max_dist"
+    )
+  )
   testthat::expect_true(is.na(depth_na))
   
   # Test IDW method
-  depth_idw <- extract_depth_at_point(x = c(coords[1] + 10, coords[2] + 10),
-                                      depth_points = depth_points,
-                                      crs = sf::st_crs(depth_points),
-                                      method = "idw",
-                                      n_neighbors = 5)
+  depth_idw <- suppressMessages(extract_depth_at_point(x = c(coords[1] + 10, coords[2] + 10),
+                                                        depth_points = depth_points,
+                                                        crs = sf::st_crs(depth_points),
+                                                        method = "idw",
+                                                        n_neighbors = 5))
   testthat::expect_type(depth_idw, "double")
   testthat::expect_true(!is.na(depth_idw))
   
   # Test IDW with point at exact location (should return exact value without interpolation)
-  depth_idw_exact <- extract_depth_at_point(x = c(coords[1], coords[2]),
-                                            depth_points = depth_points,
-                                            crs = sf::st_crs(depth_points),
-                                            method = "idw",
-                                            n_neighbors = 5)
+  depth_idw_exact <- suppressMessages(extract_depth_at_point(x = c(coords[1], coords[2]),
+                                                              depth_points = depth_points,
+                                                              crs = sf::st_crs(depth_points),
+                                                              method = "idw",
+                                                              n_neighbors = 5))
   # When point is exactly at a data point, should return that exact depth
   # Use tight tolerance since distance is exactly 0 (no rounding errors expected)
   testthat::expect_equal(depth_idw_exact, depth_points$depth[1],
@@ -106,30 +111,34 @@ test_that("extract depth from contours works", {
     c()
   
   # Test extraction from contours
-  depth_contour <- extract_depth_at_point(x = x,
-                                          contours = contours,
-                                          crs = 2193,
-                                          method = "nearest")
+  depth_contour <- suppressMessages(extract_depth_at_point(x = x,
+                                                            contours = contours,
+                                                            crs = 2193,
+                                                            method = "nearest"))
   testthat::expect_type(depth_contour, "double")
   testthat::expect_true(!is.na(depth_contour))
   testthat::expect_true(depth_contour <= 0)  # Depth should be negative or zero
   
   # Test with very small max_dist - should likely return NA since point is not on contour
-  depth_na_small <- extract_depth_at_point(x = x,
-                                           contours = contours,
-                                           crs = 2193,
-                                           method = "nearest",
-                                           max_dist = 0.01)
+  depth_na_small <- suppressMessages(
+    suppressWarnings(
+      extract_depth_at_point(x = x,
+                            contours = contours,
+                            crs = 2193,
+                            method = "nearest",
+                            max_dist = 0.01)
+    )
+  )
   # Very restrictive distance likely results in NA, but verify it's numeric
   testthat::expect_type(depth_na_small, "double")
   testthat::expect_true(is.na(depth_na_small))
   
   # Test with large max_dist - should return a valid depth
-  depth_large_dist <- extract_depth_at_point(x = x,
-                                             contours = contours,
-                                             crs = 2193,
-                                             method = "nearest",
-                                             max_dist = 10000)
+  depth_large_dist <- suppressMessages(extract_depth_at_point(x = x,
+                                                               contours = contours,
+                                                               crs = 2193,
+                                                               method = "nearest",
+                                                               max_dist = 10000))
   testthat::expect_type(depth_large_dist, "double")
   testthat::expect_true(!is.na(depth_large_dist))
 })
@@ -204,6 +213,82 @@ test_that("CRS transformation works correctly", {
                               coords = c("lon", "lat"), crs = 4326)
   
   # Extract should work with automatic CRS transformation
-  depth <- extract_depth_at_point(x = point_wgs84, bathy_raster = bathy)
+  depth <- suppressMessages(extract_depth_at_point(x = point_wgs84, bathy_raster = bathy))
   testthat::expect_type(depth, "double")
 })
+
+test_that("boundary checks work correctly", {
+  shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
+                                   package = "bathytools"))
+  depth_points <- readRDS(system.file("extdata/depth_points.rds",
+                                    package = "bathytools"))
+  bathy <- rasterise_bathy(shoreline = shoreline, depth_points = depth_points,
+                           crs = 2193, res = 8)
+  
+  # Test point outside raster extent returns NA with warning
+  raster_ext <- terra::ext(bathy)
+  outside_point <- c(raster_ext[1] - 1000, raster_ext[3] - 1000)
+  
+  testthat::expect_warning(
+    result <- extract_depth_at_point(x = outside_point, bathy_raster = bathy, crs = 2193),
+    "outside the bathymetry raster extent"
+  )
+  testthat::expect_true(is.na(result))
+  
+  # Test point outside depth points extent with warning
+  depth_bbox <- sf::st_bbox(depth_points)
+  outside_point2 <- c(depth_bbox["xmin"] - 1000, depth_bbox["ymin"] - 1000)
+  
+  testthat::expect_warning(
+    suppressMessages(extract_depth_at_point(x = outside_point2, 
+                                            depth_points = depth_points,
+                                            crs = sf::st_crs(depth_points))),
+    "outside the extent of depth points"
+  )
+  
+  # Test point outside contours extent with warning
+  contours <- get_contours(bathy_raster = bathy)
+  contours_bbox <- sf::st_bbox(contours)
+  outside_point3 <- c(contours_bbox["xmin"] - 1000, contours_bbox["ymin"] - 1000)
+  
+  testthat::expect_warning(
+    suppressMessages(extract_depth_at_point(x = outside_point3,
+                                            contours = contours,
+                                            crs = sf::st_crs(contours))),
+    "outside the extent of contours"
+  )
+})
+
+test_that("cli messages are generated correctly", {
+  shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
+                                   package = "bathytools"))
+  depth_points <- readRDS(system.file("extdata/depth_points.rds",
+                                    package = "bathytools"))
+  bathy <- rasterise_bathy(shoreline = shoreline, depth_points = depth_points,
+                           crs = 2193, res = 8)
+  x <- shoreline |> 
+    sf::st_point_on_surface() |> 
+    sf::st_coordinates() |> 
+    c()
+  
+  # Test that informational messages are generated for raster extraction
+  testthat::expect_message(
+    extract_depth_at_point(x = x, bathy_raster = bathy, crs = 2193),
+    "Extracting depth from bathymetry raster"
+  )
+  
+  testthat::expect_message(
+    extract_depth_at_point(x = x, bathy_raster = bathy, crs = 2193),
+    "Point is within raster extent"
+  )
+  
+  # Test that informational messages are generated for point extraction
+  coords <- sf::st_coordinates(depth_points[1, ])
+  testthat::expect_message(
+    extract_depth_at_point(x = c(coords[1], coords[2]),
+                          depth_points = depth_points,
+                          crs = sf::st_crs(depth_points)),
+    "Extracting depth from point data"
+  )
+})
+
