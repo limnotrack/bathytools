@@ -39,7 +39,7 @@
 #' @export
 #'
 #' @importFrom terra extract crs vect
-#' @importFrom sf st_as_sf st_coordinates st_crs st_transform st_distance st_nearest_feature
+#' @importFrom sf st_as_sf st_coordinates st_crs st_transform st_distance st_nearest_feature st_geometry_type
 #' @importFrom units drop_units
 #'
 #' @examples
