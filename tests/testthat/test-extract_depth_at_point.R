@@ -61,7 +61,7 @@ test_that("extract depth from point data works", {
   testthat::expect_true(is.na(depth_na))
   
   # Test IDW method
-  depth_idw <- extract_depth_at_point(x = c(coords[1], coords[2]),
+  depth_idw <- extract_depth_at_point(x = c(coords[1] + 10, coords[2] + 10),
                                       depth_points = depth_points,
                                       crs = sf::st_crs(depth_points),
                                       method = "idw",
@@ -69,13 +69,15 @@ test_that("extract depth from point data works", {
   testthat::expect_type(depth_idw, "double")
   testthat::expect_true(!is.na(depth_idw))
   
-  # Test IDW with point at exact location (should return exact value)
+  # Test IDW with point at exact location (should return exact value without interpolation)
   depth_idw_exact <- extract_depth_at_point(x = c(coords[1], coords[2]),
                                             depth_points = depth_points,
                                             crs = sf::st_crs(depth_points),
                                             method = "idw",
                                             n_neighbors = 5)
-  testthat::expect_equal(depth_idw_exact, depth_points$depth[1])
+  # When point is exactly at a data point, should return that exact depth
+  testthat::expect_equal(depth_idw_exact, depth_points$depth[1],
+                        tolerance = 1e-10)
 })
 
 test_that("extract depth from contours works", {
@@ -96,14 +98,23 @@ test_that("extract depth from contours works", {
   testthat::expect_true(!is.na(depth_contour))
   testthat::expect_true(depth_contour <= 0)  # Depth should be negative or zero
   
-  # Test with max_dist constraint - may or may not return NA depending on contour proximity
-  depth_limited <- extract_depth_at_point(x = c(2823700, 6404300),
-                                          contours = contours,
-                                          crs = 2193,
-                                          method = "nearest",
-                                          max_dist = 0.1)
-  # Just verify it's numeric (could be NA or a depth value)
-  testthat::expect_type(depth_limited, "double")
+  # Test with very small max_dist - should likely return NA since point is not on contour
+  depth_na_small <- extract_depth_at_point(x = c(2823700, 6404300),
+                                           contours = contours,
+                                           crs = 2193,
+                                           method = "nearest",
+                                           max_dist = 0.01)
+  # Very restrictive distance likely results in NA, but verify it's numeric
+  testthat::expect_type(depth_na_small, "double")
+  
+  # Test with large max_dist - should return a valid depth
+  depth_large_dist <- extract_depth_at_point(x = c(2823700, 6404300),
+                                             contours = contours,
+                                             crs = 2193,
+                                             method = "nearest",
+                                             max_dist = 10000)
+  testthat::expect_type(depth_large_dist, "double")
+  testthat::expect_true(!is.na(depth_large_dist))
 })
 
 test_that("input validation works", {
