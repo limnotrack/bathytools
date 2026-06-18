@@ -119,7 +119,7 @@ test_that("extract depth from contours works", {
   testthat::expect_true(!is.na(depth_contour))
   testthat::expect_true(depth_contour <= 0)  # Depth should be negative or zero
   
-  # Test with very small max_dist - should likely return NA since point is not on contour
+  # Test with very small max_dist - expected to return NA since random point is unlikely to be exactly on contour
   depth_na_small <- suppressMessages(
     suppressWarnings(
       extract_depth_at_point(x = x,
@@ -129,7 +129,7 @@ test_that("extract depth from contours works", {
                             max_dist = 0.01)
     )
   )
-  # Very restrictive distance likely results in NA, but verify it's numeric
+  # Very restrictive distance expected to result in NA
   testthat::expect_type(depth_na_small, "double")
   testthat::expect_true(is.na(depth_na_small))
   

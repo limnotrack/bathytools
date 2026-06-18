@@ -8,8 +8,9 @@
 #' The function performs boundary checks to verify that the point is within the
 #' extent of the data source before attempting extraction. For raster data, the
 #' function will return NA with a warning if the point is outside the raster extent.
-#' For point and contour data, the function will issue a warning but continue with
-#' the search, as points may still be found within the specified max_dist.
+#' For point and contour data, the function will issue a warning if the point is
+#' outside the data extent but will continue searching, as features may still be
+#' found within the specified max_dist (though NA will be returned if none are found).
 #'
 #' The function uses the cli package to provide informative messages about the
 #' extraction method, boundary checks, and results, making it easier to understand
@@ -218,7 +219,7 @@ extract_depth_at_point <- function(x,
     if (point_coords[1] < depth_bbox["xmin"] || point_coords[1] > depth_bbox["xmax"] ||
         point_coords[2] < depth_bbox["ymin"] || point_coords[2] > depth_bbox["ymax"]) {
       cli::cli_warn(c("!" = "Point is outside the extent of depth points.",
-                      "i" = "Continuing with {method} search (may return NA if beyond max_dist)."))
+                      "i" = "Continuing with {.field {method}} search (may return NA if beyond max_dist)."))
     } else {
       cli::cli_inform(c("v" = "Point is within depth points extent."))
     }
@@ -321,7 +322,7 @@ extract_depth_at_point <- function(x,
     if (point_coords[1] < contours_bbox["xmin"] || point_coords[1] > contours_bbox["xmax"] ||
         point_coords[2] < contours_bbox["ymin"] || point_coords[2] > contours_bbox["ymax"]) {
       cli::cli_warn(c("!" = "Point is outside the extent of contours.",
-                      "i" = "Continuing with {method} search (may return NA if beyond max_dist)."))
+                      "i" = "Continuing with {.field {method}} search (may return NA if beyond max_dist)."))
     } else {
       cli::cli_inform(c("v" = "Point is within contours extent."))
     }
