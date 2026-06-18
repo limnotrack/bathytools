@@ -2,17 +2,21 @@
 #'
 #' This function extracts the lake depth at a specific point location from
 #' various data sources: bathymetry raster, point depth data, or contour data.
+#' If multiple data sources are provided, the function will use them in the
+#' following priority order: bathymetry raster > point data > contours.
 #'
 #' @param x numeric or sf POINT. Either a numeric vector of length 2 containing
 #'   the x and y coordinates (c(x, y)), or an sf POINT object. If numeric
 #'   coordinates are provided, the `crs` parameter must also be specified.
 #' @param bathy_raster SpatRaster object with the bathymetry data. Optional if
-#'   `depth_points` or `contours` is provided.
+#'   `depth_points` or `contours` is provided. If provided along with other
+#'   data sources, this will be used preferentially.
 #' @param depth_points sf POINT object with depth data. Must contain a 'depth'
-#'   column. Optional if `bathy_raster` or `contours` is provided.
+#'   column. Optional if `bathy_raster` or `contours` is provided. If provided
+#'   along with `contours` (but not `bathy_raster`), this will be used preferentially.
 #' @param contours sf LINESTRING or MULTILINESTRING object with contour data.
 #'   Must contain a 'depth' column. Optional if `bathy_raster` or `depth_points`
-#'   is provided.
+#'   is provided. This has the lowest priority if multiple data sources are provided.
 #' @param crs numeric or character. Coordinate reference system (CRS) of the
 #'   input coordinates if `x` is a numeric vector. Can be an EPSG code or proj4
 #'   string. Required if `x` is numeric; ignored if `x` is an sf object.

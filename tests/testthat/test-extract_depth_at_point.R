@@ -96,13 +96,14 @@ test_that("extract depth from contours works", {
   testthat::expect_true(!is.na(depth_contour))
   testthat::expect_true(depth_contour <= 0)  # Depth should be negative or zero
   
-  # Test with max_dist constraint
-  depth_na <- extract_depth_at_point(x = c(2823700, 6404300),
-                                     contours = contours,
-                                     crs = 2193,
-                                     method = "nearest",
-                                     max_dist = 0.1)
-  testthat::expect_true(is.na(depth_na) || !is.na(depth_na))  # Depends on contour proximity
+  # Test with max_dist constraint - may or may not return NA depending on contour proximity
+  depth_limited <- extract_depth_at_point(x = c(2823700, 6404300),
+                                          contours = contours,
+                                          crs = 2193,
+                                          method = "nearest",
+                                          max_dist = 0.1)
+  # Just verify it's numeric (could be NA or a depth value)
+  testthat::expect_type(depth_limited, "double")
 })
 
 test_that("input validation works", {
