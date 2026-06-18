@@ -100,10 +100,6 @@ test_that("extract depth from contours works", {
   contours <- readRDS(system.file("extdata/depth_contours.rds",
                                   package = "bathytools"))
   
-  depth_points_sf <- depth_points |> 
-    sf::st_as_sf(coords = c("lon", "lat"), crs = 4326) |> 
-    sf::st_transform(2193)
-  
   pnt <- shoreline |> 
     sf::st_sample(size = 1)
   x <- pnt |> 
