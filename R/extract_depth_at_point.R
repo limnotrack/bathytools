@@ -188,6 +188,15 @@ extract_depth_at_point <- function(x,
     return(as.numeric(depth_value[1, 2]))
     
   } else if (!is.null(depth_points)) {
+    
+    if (is.data.frame(depth_points) & !inherits(depth_points, "sf")) {
+      lon_lat_cols <- guess_lonlat_cols(depth_points)
+      if (is.null(crs)) {
+        crs <- 4326
+      }
+      depth_points <- sf::st_as_sf(depth_points, coords = lon_lat_cols, crs = crs)
+    }
+    
     # Extract from point data
     if (!inherits(depth_points, "sf")) {
       cli::cli_abort("'depth_points' must be an sf object.")

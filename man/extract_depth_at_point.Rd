@@ -67,6 +67,18 @@ various data sources: bathymetry raster, point depth data, or contour data.
 If multiple data sources are provided, the function will use them in the
 following priority order: bathymetry raster > point data > contours.
 }
+\details{
+The function performs boundary checks to verify that the point is within the
+extent of the data source before attempting extraction. For raster data, the
+function will return NA with a warning if the point is outside the raster extent.
+For point and contour data, the function will issue a warning if the point is
+outside the data extent but will continue searching, as features may still be
+found within the specified max_dist (though NA will be returned if none are found).
+
+The function uses the cli package to provide informative messages about the
+extraction method, boundary checks, and results, making it easier to understand
+what the function is doing.
+}
 \examples{
 \dontrun{
 # Load example data
