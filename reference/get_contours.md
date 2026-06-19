@@ -42,15 +42,13 @@ package = "bathytools"))
 bathy_raster <- rasterise_bathy(shoreline = shoreline,
 depth_points = depth_points, crs = 2193, res = 8)
 #> ℹ Generating depth points for interpolation
-#> Generating depth points... [2026-06-16 04:51:42]
-#> Finished! [2026-06-16 04:51:42]
-#> ✔ Generating depth points for interpolation [188ms]
+#> ✔ Generating depth points for interpolation [205ms]
 #> 
 #> ℹ Interpolating depth points to raster
-#> Adjusting depths >= 0 to  -0.81 m
-#> Finished! [2026-06-16 04:52:00]
+#> ℹ Adjusting depths >= 0 to -0.81m
+#> ℹ Interpolating depth points to raster
 
-#> ✔ Interpolating depth points to raster [18.6s]
+#> ✔ Interpolating depth points to raster [17.9s]
 #> 
 contours <- get_contours(bathy_raster = bathy_raster)
 ```

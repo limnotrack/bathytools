@@ -71,6 +71,8 @@ bathy <- rasterise_bathy(shoreline = shoreline, depth_points = depth_points,
   from a DEM
 - [`estimate_bathymetry()`](estimate_bathymetry.md) : Estimate
   bathymetry from a shoreline polygon using distance transformation.
+- [`extract_depth_at_point()`](extract_depth_at_point.md) : Extract Lake
+  Depth at a Given Point
 - [`generate_depth_points()`](generate_depth_points.md) : Generate depth
   points for interpolation
 - [`get_contours()`](get_contours.md) : Get contours from a bathymetric
