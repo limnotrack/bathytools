@@ -42,8 +42,8 @@ generate_depth_points <- function(shoreline, islands = NULL, depth_points = NULL
                                   contours = NULL, res = 2, subsample = TRUE,
                                   crs = NULL) {
 
-  message("Generating depth points... [", format(Sys.time()), "]")
-
+  cli::cli_progress_step("Generating depth points for interpolation")
+  
   if (is.null(crs)) {
     crs <- sf::st_crs(shoreline)
   }
@@ -273,7 +273,7 @@ generate_depth_points <- function(shoreline, islands = NULL, depth_points = NULL
   }
   # tm_shape(all) +
   #   tm_dots(col = "depth", palette = "-Blues", size = 0.1, title = "Depth (m)")
-  message("Finished! [", format(Sys.time()), "]")
+  # message("Finished! [", format(Sys.time()), "]")
   return(all)
 }
 

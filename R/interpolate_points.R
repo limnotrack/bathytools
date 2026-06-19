@@ -33,8 +33,8 @@ interpolate_points <- function(depth_points, shoreline, islands = NULL, crs,
                                n = 1, m = 1, h = 8,
                                print_plot = TRUE) {
 
+  cli::cli_progress_step("Interpolating depth points to raster")
   method <- rlang::arg_match(method)
-  # message("Interpolating to raster... [", format(Sys.time()), "]")
 
   # Convert points to a data.frame
   coords <- depth_points |>
@@ -179,14 +179,13 @@ interpolate_points <- function(depth_points, shoreline, islands = NULL, crs,
     min_depth <- mm[1]
     adj_depth <- round(0.01 * min_depth, 2)
     adj_depth <- ifelse(adj_depth > -0.4, -0.4, adj_depth)
-    message(paste("Adjusting depths >= 0 to ", adj_depth, "m"))
+    cli::cli_alert_info("Adjusting depths >= 0 to {adj_depth}m")
 
     # surf <- bathy_raster > -0.5
     # terra::plot(surf)
     bathy_raster[bathy_raster > adj_depth] <- adj_depth
   }
 
-  message("Finished! [", format(Sys.time()), "]")
 
 
   # Rename the variable in the raster

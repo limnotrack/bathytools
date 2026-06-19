@@ -27,14 +27,14 @@ rasterise_bathy <- function(shoreline, islands = NULL, depth_points = NULL,
                             crs, method = "nn", print_plot = TRUE,
                             n = 1, m = 1, h = 8) {
 
-  cli::cli_progress_step("Generating depth points for interpolation")
+  # cli::cli_progress_step("Generating depth points for interpolation")
   depth_points <- generate_depth_points(shoreline = shoreline, 
                                         islands = islands,
                                         depth_points = depth_points, 
                                         contours = contours, res = res,
                                         subsample = subsample, crs = crs)
 
-  cli::cli_progress_step("Interpolating depth points to raster")
+  # cli::cli_progress_step("Interpolating depth points to raster")
   bathy <- interpolate_points(depth_points = depth_points, 
                               shoreline = shoreline, islands = islands,
                               res = res, method = method, n = n, m = m, h = h,
