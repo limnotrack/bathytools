@@ -8,12 +8,14 @@ extract_depth_at_point(
   x,
   bathy_raster = NULL,
   depth_points = NULL,
+  shoreline = NULL,
+  islands = NULL,
   contours = NULL,
   crs = NULL,
-  method = NULL,
+  method = c("bilinear", "simple", "nearest", "idw"),
   max_dist = Inf,
   idw_power = 2,
-  n_neighbors = 5
+  n_neighbors = 50
 )
 }
 \arguments{
@@ -29,6 +31,15 @@ data sources, this will be used preferentially.}
 column. Optional if \code{bathy_raster} or \code{contours} is provided. If provided
 along with \code{contours} (but not \code{bathy_raster}), this will be used preferentially.}
 
+\item{shoreline}{sf POLYGON or MULTIPOLYGON object representing the
+shoreline. Optional but required if \code{contours} are provided, as the shoreline
+is used to define the lake boundary for interpolation. Ignored if \code{contours}
+is not provided.}
+
+\item{islands}{sf POLYGON or MULTIPOLYGON object representing any islands in
+the lake. Default is NULL. Optional but recommended if islands are present,
+as they can affect the interpolation of depth points and contours.}
+
 \item{contours}{sf LINESTRING or MULTILINESTRING object with contour data.
 Must contain a 'depth' column. Optional if \code{bathy_raster} or \code{depth_points}
 is provided. This has the lowest priority if multiple data sources are provided.}
@@ -41,7 +52,7 @@ string. Required if \code{x} is numeric; ignored if \code{x} is an sf object.}
 \itemize{
 \item "bilinear": bilinear interpolation from raster (default for raster)
 \item "simple": nearest cell value from raster
-\item "nearest": nearest neighbor from point data or contours (default for point/contour data)
+\item "nearest": nearest neighbor from point data or contours
 \item "idw": inverse distance weighting from point data
 }
 Default is "bilinear" for raster data and "nearest" for point/contour data.}
@@ -54,7 +65,7 @@ Default is Inf (no distance limit).}
 Default is 2.}
 
 \item{n_neighbors}{integer. Number of nearest neighbors to use for IDW
-interpolation. Default is 5.}
+interpolation. Default is 50.}
 }
 \value{
 numeric. The depth value at the specified point. Returns NA if no
