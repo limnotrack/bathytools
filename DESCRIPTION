@@ -17,11 +17,13 @@ Imports:
     MBA,
     parallel,
     plotly,
+    rlang,
     sf,
     terra,
     tmap,
     units
 Suggests: 
+    aemetools (>= 0.3.0),
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
@@ -33,3 +35,5 @@ Depends:
     R (>= 3.5)
 LazyData: true
 Config/roxygen2/version: 8.0.0
+Remotes: 
+    limnotrack/aemetools
