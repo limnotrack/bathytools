@@ -35,6 +35,9 @@ interpolate_points <- function(depth_points, shoreline, islands = NULL, crs,
 
   cli::cli_progress_step("Interpolating depth points to raster")
   method <- rlang::arg_match(method)
+  if (missing(crs)) {
+    crs <- sf::st_crs(depth_points)
+  }
 
   # Convert points to a data.frame
   coords <- depth_points |>
