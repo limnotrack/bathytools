@@ -52,4 +52,20 @@ test_that("generate contours from a bathymetry raster file", {
 
   shoreline2 <- get_shoreline(bathy_raster = bathy_raster)
   testthat::expect_s3_class(shoreline2, "sf")
+  
+  hyps <- bathy_to_hypso(bathy_raster = bathy_raster)
+  
+})
+
+test_that("generate raster from contours", {
+  shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
+                                   package = "bathytools"))
+  contours <- readRDS(system.file("extdata/depth_contours.rds",
+                                  package = "bathytools"))
+  bathy_raster <- contours_to_raster(shoreline = shoreline, contours = contours)
+  
+  hyps2 <- bathy_to_hypso(bathy_raster = bathy_raster)
+  # plot(hyps$area, hyps$depth, type = "l")
+  plot(hyps2$area, hyps2$depth,  col = "red")
+  testthat::expect_true(all(hyps2$area >= 0))
 })
