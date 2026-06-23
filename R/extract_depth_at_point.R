@@ -61,9 +61,10 @@
 #' @export
 #'
 #' @importFrom terra extract crs vect ext
-#' @importFrom sf st_as_sf st_coordinates st_crs st_transform st_distance st_nearest_feature st_geometry_type st_bbox
+#' @importFrom sf st_as_sf st_coordinates st_crs st_transform st_distance 
+#' @importFrom sf st_nearest_feature st_geometry_type st_bbox
 #' @importFrom units drop_units
-#' @importFrom cli cli_inform cli_warn cli_abort
+#' @importFrom cli cli_inform cli_warn cli_abort cli_progress_step
 #' @importFrom rlang arg_match
 #'
 #' @examples
@@ -155,6 +156,7 @@ extract_depth_at_point <- function(x,
   
   # If contours supplied, convert to depth points
   if (!is.null(shoreline) && !is.null(contours) && method != "nearest") {
+    cli::cli_progress_step("Extracting depth points for interpolation")
     missing_islands <- detect_islands(shoreline)
     if (!is.null(missing_islands)) {
       if (is.null(islands)) {
@@ -165,17 +167,76 @@ extract_depth_at_point <- function(x,
     }
     shoreline <- detect_shoreline(shoreline)
     res <- est_res(shoreline)
-    depth_points <- generate_depth_points(shoreline = shoreline, 
-                                          islands = islands,
-                                          contours = contours, 
-                                          res = res)
+    dist <- sqrt(units::drop_units(sf::st_area(shoreline)) / pi) * 0.1
+    dist <- round(dist)
+    dist <- max(200, min(dist, 5000))
+    depth_points <- data.frame()
     
-    bathy_raster <- interpolate_points(depth_points = depth_points, 
-                                       shoreline = shoreline,
-                                       islands = islands,
-                                       res = res,
-                                       print_plot = FALSE)
+    while (nrow(depth_points) < n_neighbors) {
+      bbox <- x |> 
+        sf::st_geometry() |> 
+        sf::st_buffer(dist = dist)
+      shore_pnts <- shoreline |>
+        sf::st_cast("LINESTRING") |>
+        sf::st_crop(bbox) |> 
+        sf::st_cast("LINESTRING") |>
+        line_to_points(res = res) |>
+        sf::st_cast("POINT") |>      # flatten MULTIPOINT → individual POINTs
+        sf::st_as_sf() |> 
+        dplyr::mutate(depth = 0)
+      
+      sel_conts <- contours |> 
+        sf::st_crop(bbox)
+      
+      cont_points <- lapply(seq_len(nrow(sel_conts)), \(i) {
+        dep <- sel_conts$depth[i]
+        sel_conts[i, ] |> 
+          sf::st_cast("LINESTRING") |>
+          line_to_points(res = res) |> 
+          sf::st_cast("POINT") |>      # flatten MULTIPOINT → individual POINTs
+          sf::st_as_sf() |> 
+          dplyr::mutate(depth = dep)
+      }) |> 
+        dplyr::bind_rows()
+      
+      depth_points <- dplyr::bind_rows(shore_pnts, cont_points) |> 
+        dplyr::rename(geometry = x)
+      dist <- dist * 2
+    }
     
+    
+    if (nrow(depth_points) >= n_neighbors) {
+      
+      depth_points <- depth_points |> 
+        dplyr::mutate(
+          distm = sf::st_distance(geometry, point_sf) |> units::drop_units()
+        ) |> 
+        # Select the n closest points
+        dplyr::slice_min(order_by = distm, n = n_neighbors) 
+      
+      method <- "idw"
+    }
+    
+    if (method == "bilinear") {
+      # tm_shape(depth_points) +
+      #   tm_dots(fill = "depth", size = 0.5) +
+      #   tm_shape(x) +
+      #   tm_dots(fill = "red", size = 0.5) +
+      #   tm_shape(bbox) +
+      #   tm_borders(col = "orange")  +
+      #   tm_shape(cont_crp) +
+      #   tm_lines()
+      depth_points <- generate_depth_points(shoreline = shoreline, 
+                                            islands = islands,
+                                            contours = contours, 
+                                            res = res)
+      
+      bathy_raster <- interpolate_points(depth_points = depth_points, 
+                                         shoreline = shoreline,
+                                         islands = islands,
+                                         res = res,
+                                         print_plot = FALSE)
+    }
   }
   
   # Determine which data source to use (priority: raster > points > contours)
@@ -195,7 +256,7 @@ extract_depth_at_point <- function(x,
       cli::cli_abort("For raster extraction, method must be 'bilinear' or 'simple'.")
     }
     
-    cli::cli_inform(c("i" = "Extracting depth from bathymetry raster using {.field {method}} method."))
+    cli::cli_progress_step(c("i" = "Extracting depth from bathymetry raster using {.field {method}} method."))
     
     # Transform point to raster CRS
     raster_crs <- terra::crs(bathy_raster)
@@ -294,7 +355,7 @@ extract_depth_at_point <- function(x,
     # --- Nearest ------------------------------------------------------------
     
     if (method == "nearest") {
-      
+      cli::cli_progress_step("Finding nearest feature in {.field {source_label}}")
       nearest_idx     <- sf::st_nearest_feature(point_transformed, source_data)
       dist_to_nearest <- sf::st_distance(point_transformed, source_data[nearest_idx, ])
       dist_to_nearest <- units::drop_units(dist_to_nearest)[1, 1]
@@ -311,6 +372,7 @@ extract_depth_at_point <- function(x,
       return(source_data$depth[nearest_idx])
       
     } else if (method == "idw") {
+      cli::cli_progress_step("Performing IDW interpolation from {.field {source_label}}")
       # Calculate distances to all points
       distances <- sf::st_distance(point_transformed, depth_points)
       distances <- units::drop_units(distances)[1, ]
@@ -350,11 +412,11 @@ extract_depth_at_point <- function(x,
       weights <- 1 / (nearest_distances ^ idw_power)
       weights <- weights / sum(weights)
       
-      tm_shape(depth_points[nearest_indices, ]) +
-        tm_dots(col = "depth", size = 0.5) +
-        tm_shape(point_transformed) +
-        tm_dots(col = "red", size = 0.5) +
-        tm_layout(main.title = "IDW Interpolation Neighbors")
+      # tm_shape(depth_points[nearest_indices, ]) +
+      #   tm_dots(fill = "depth", size = 0.5) +
+      #   tm_shape(point_transformed) +
+      #   tm_dots(fill = "red", size = 0.5) +
+      #   tm_layout(main.title = "IDW Interpolation Neighbors")
       
       # Calculate weighted depth
       depth_value <- sum(depth_points$depth[nearest_indices] * weights)
