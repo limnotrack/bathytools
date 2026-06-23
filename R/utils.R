@@ -138,28 +138,15 @@ detect_islands <- function(x) {
 #' @param x An sf object with POLYGON or MULTIPOLYGON geometry
 #' @return An sf object with the outer shoreline polygon(s)
 #' @export
-#' @importFrom sf st_geometry st_polygon st_multipolygon st_sfc st_crs st_sf
+#' @importFrom sf st_as_sf
+#' @importFrom terra vect fillHoles
 detect_shoreline <- function(x) {
   stopifnot(inherits(x, "sf") || inherits(x, "sfc"))
   
-  geom <- if (inherits(x, "sf")) sf::st_geometry(x) else x
-  
-  outer_polys <- lapply(seq_along(geom), function(i) {
-    g <- geom[[i]]
-    
-    if (inherits(g, "MULTIPOLYGON")) {
-      # Rebuild each sub-polygon using only its outer ring
-      outer_rings <- lapply(seq_along(g), function(j) {
-        st_polygon(list(g[[j]][[1]]))   # [[j]][[1]] = outer ring of sub-polygon j
-      })
-      sf::st_multipolygon(lapply(outer_rings, function(p) list(p[[1]])))
-      
-    } else {
-      # POLYGON: keep only the first (outer) ring
-      sf::st_polygon(list(g[[1]]))
-    }
-  })
-  
-  shoreline_sfc <- sf::st_sfc(outer_polys, crs = sf::st_crs(x))
-  sf::st_sf(geometry = shoreline_sfc)
+  x |>
+    sf::st_geometry() |> 
+    terra::vect() |>
+    terra::fillHoles() |>
+    # terra::as.lines() |> 
+    sf::st_as_sf()
 }
