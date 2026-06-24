@@ -46,13 +46,13 @@ bathy_raster <- rasterise_bathy(shoreline = shoreline,
 depth_points = depth_points, crs = 2193)
 #> No islands found.
 #> ℹ Generating depth points for interpolation
-#> ✔ Generating depth points for interpolation [217ms]
+#> ✔ Generating depth points for interpolation [210ms]
 #> 
 #> ℹ Interpolating depth points to raster
 #> ℹ Adjusting depths >= 0 to -0.82m
 #> ℹ Interpolating depth points to raster
 
-#> ✔ Interpolating depth points to raster [16.2s]
+#> ✔ Interpolating depth points to raster [17.3s]
 #> 
 hyps <- bathy_to_hypso(bathy_raster = bathy_raster)
 ```

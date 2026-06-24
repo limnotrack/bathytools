@@ -52,13 +52,13 @@ bathy_raster <- rasterise_bathy(shoreline = shoreline,
 depth_points = depth_points, crs = 2193)
 #> No islands found.
 #> ℹ Generating depth points for interpolation
-#> ✔ Generating depth points for interpolation [203ms]
+#> ✔ Generating depth points for interpolation [184ms]
 #> 
 #> ℹ Interpolating depth points to raster
 #> ℹ Adjusting depths >= 0 to -0.82m
 #> ℹ Interpolating depth points to raster
 
-#> ✔ Interpolating depth points to raster [13.7s]
+#> ✔ Interpolating depth points to raster [14.7s]
 #> 
 calculate_lake_volume(bathy_raster = bathy_raster)
 #> [1] 435826452
