@@ -374,7 +374,7 @@ extract_depth_at_point <- function(x,
     } else if (method == "idw") {
       cli::cli_progress_step("Performing IDW interpolation from {.field {source_label}}")
       # Calculate distances to all points
-      distances <- sf::st_distance(point_transformed, depth_points)
+      distances <- sf::st_distance(point_transformed, source_data)
       distances <- units::drop_units(distances)[1, ]
       
       # Filter by max_dist

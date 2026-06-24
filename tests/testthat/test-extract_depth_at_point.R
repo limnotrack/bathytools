@@ -2,7 +2,7 @@ test_that("extract depth from bathymetry raster works", {
   shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
                                    package = "bathytools"))
   depth_points <- readRDS(system.file("extdata/depth_points.rds",
-                                    package = "bathytools"))
+                                      package = "bathytools"))
   bathy <- rasterise_bathy(shoreline = shoreline, depth_points = depth_points,
                            crs = 2193, res = 8)
   x <- shoreline |> 
@@ -12,38 +12,38 @@ test_that("extract depth from bathymetry raster works", {
   
   # Test extraction with numeric coordinates - suppress cli messages for clean tests
   depth <- suppressMessages(extract_depth_at_point(x = x,
-                                                    bathy_raster = bathy,
-                                                    crs = 2193))
+                                                   bathy_raster = bathy,
+                                                   crs = 2193))
   testthat::expect_type(depth, "double")
   testthat::expect_true(is.numeric(depth))
   testthat::expect_true(depth <= 0)  # Depth should be negative or zero
   
   # Test extraction with bilinear method
   depth_bilinear <- suppressMessages(extract_depth_at_point(x = x,
-                                                             bathy_raster = bathy,
-                                                             crs = 2193,
-                                                             method = "bilinear"))
+                                                            bathy_raster = bathy,
+                                                            crs = 2193,
+                                                            method = "bilinear"))
   testthat::expect_type(depth_bilinear, "double")
   
   # Test extraction with simple method
   depth_simple <- suppressMessages(extract_depth_at_point(x = x,
-                                                           bathy_raster = bathy,
-                                                           crs = 2193,
-                                                           method = "simple"))
+                                                          bathy_raster = bathy,
+                                                          crs = 2193,
+                                                          method = "simple"))
   testthat::expect_type(depth_simple, "double")
   
   # Test with sf POINT object
   point_sf <- sf::st_as_sf(data.frame(x = x[1], y = x[2]),
                            coords = c("x", "y"), crs = 2193)
   depth_sf <- suppressMessages(extract_depth_at_point(x = point_sf,
-                                                       bathy_raster = bathy))
+                                                      bathy_raster = bathy))
   testthat::expect_type(depth_sf, "double")
   testthat::expect_equal(depth_sf, depth_bilinear)
 })
 
 test_that("extract depth from point data works", {
   depth_points <- readRDS(system.file("extdata/depth_points.rds",
-                                    package = "bathytools"))
+                                      package = "bathytools"))
   
   # Get a coordinate from the point data
   coords <- depth_points[1, ] |> 
@@ -51,9 +51,9 @@ test_that("extract depth from point data works", {
   
   # Test nearest neighbor extraction
   depth_nearest <- suppressMessages(extract_depth_at_point(x = coords,
-                                                            depth_points = depth_points,
-                                                            # crs = sf::st_crs(depth_points),
-                                                            method = "nearest"))
+                                                           depth_points = depth_points,
+                                                           # crs = sf::st_crs(depth_points),
+                                                           method = "nearest"))
   testthat::expect_type(depth_nearest, "double")
   testthat::expect_equal(depth_nearest, depth_points$depth[1])
   
@@ -81,28 +81,28 @@ test_that("extract depth from point data works", {
     sf::st_as_sf(coords = c("lon", "lat"), crs = 4326)
   
   depth_idw <- suppressMessages(extract_depth_at_point(x = coords3,
-                                                        depth_points = depth_points,
-                                                        method = "idw",
-                                                        n_neighbors = 5))
+                                                       depth_points = depth_points,
+                                                       method = "idw",
+                                                       n_neighbors = 5))
   testthat::expect_type(depth_idw, "double")
   testthat::expect_true(!is.na(depth_idw))
   
   # Test IDW with point at exact location (should return exact value without interpolation)
   depth_idw_exact <- suppressMessages(extract_depth_at_point(x = coords,
-                                                              depth_points = depth_points,
-                                                              method = "idw",
-                                                              n_neighbors = 5))
+                                                             depth_points = depth_points,
+                                                             method = "idw",
+                                                             n_neighbors = 5))
   # When point is exactly at a data point, should return that exact depth
   # Use tight tolerance since distance is exactly 0 (no rounding errors expected)
   testthat::expect_equal(depth_idw_exact, depth_points$depth[1],
-                        tolerance = 1e-10)
+                         tolerance = 1e-10)
 })
 
 test_that("extract depth from contours works", {
   shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
                                    package = "bathytools"))
   depth_points <- readRDS(system.file("extdata/depth_points.rds",
-                                    package = "bathytools"))
+                                      package = "bathytools"))
   bathy <- rasterise_bathy(shoreline = shoreline, depth_points = depth_points,
                            crs = 2193, res = 8)
   contours <- readRDS(system.file("extdata/depth_contours.rds",
@@ -116,9 +116,9 @@ test_that("extract depth from contours works", {
   
   # Test extraction from contours
   depth_contour <- suppressMessages(extract_depth_at_point(x = x,
-                                                            contours = contours,
-                                                            crs = 2193,
-                                                            method = "nearest"))
+                                                           contours = contours,
+                                                           crs = 2193,
+                                                           method = "nearest"))
   testthat::expect_type(depth_contour, "double")
   testthat::expect_true(!is.na(depth_contour))
   testthat::expect_true(depth_contour <= 0)  # Depth should be negative or zero
@@ -127,10 +127,10 @@ test_that("extract depth from contours works", {
   depth_na_small <- suppressMessages(
     suppressWarnings(
       extract_depth_at_point(x = x,
-                            contours = contours,
-                            crs = 2193,
-                            method = "nearest",
-                            max_dist = 0.01)
+                             contours = contours,
+                             crs = 2193,
+                             method = "nearest",
+                             max_dist = 0.01)
     )
   )
   # Very restrictive distance expected to result in NA
@@ -139,10 +139,10 @@ test_that("extract depth from contours works", {
   
   # Test with large max_dist - should return a valid depth
   depth_large_dist <- suppressMessages(extract_depth_at_point(x = x,
-                                                               contours = contours,
-                                                               crs = 2193,
-                                                               method = "nearest",
-                                                               max_dist = 10000))
+                                                              contours = contours,
+                                                              crs = 2193,
+                                                              method = "nearest",
+                                                              max_dist = 10000))
   testthat::expect_type(depth_large_dist, "double")
   testthat::expect_true(!is.na(depth_large_dist))
 })
@@ -151,7 +151,7 @@ test_that("input validation works", {
   shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
                                    package = "bathytools"))
   depth_points <- readRDS(system.file("extdata/depth_points.rds",
-                                    package = "bathytools"))
+                                      package = "bathytools"))
   
   bathy <- rasterise_bathy(shoreline = shoreline, depth_points = depth_points,
                            crs = 2193, res = 8)
@@ -177,7 +177,7 @@ test_that("input validation works", {
   # Test error when invalid method for raster
   testthat::expect_error(
     extract_depth_at_point(x = c(2823700, 6404300), bathy_raster = bathy,
-                          crs = 2193, method = "idw"),
+                           crs = 2193, method = "idw"),
     "method must be 'bilinear' or 'simple'"
   )
   
@@ -189,7 +189,7 @@ test_that("input validation works", {
   points_no_depth$depth <- NULL
   testthat::expect_error(
     extract_depth_at_point(x = c(2823700, 6404300), depth_points = points_no_depth,
-                          crs = 2193),
+                           crs = 2193),
     "must contain a 'depth' column"
   )
   
@@ -208,7 +208,7 @@ test_that("CRS transformation works correctly", {
   shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
                                    package = "bathytools"))
   depth_points <- readRDS(system.file("extdata/depth_points.rds",
-                                    package = "bathytools"))
+                                      package = "bathytools"))
   bathy <- rasterise_bathy(shoreline = shoreline, depth_points = depth_points,
                            crs = 2193, res = 8)
   
@@ -225,7 +225,7 @@ test_that("boundary checks work correctly", {
   shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
                                    package = "bathytools"))
   depth_points <- readRDS(system.file("extdata/depth_points.rds",
-                                    package = "bathytools"))
+                                      package = "bathytools"))
   bathy <- rasterise_bathy(shoreline = shoreline, depth_points = depth_points,
                            crs = 2193, res = 8)
   
@@ -248,10 +248,11 @@ test_that("boundary checks work correctly", {
   outside_point2 <- c(depth_bbox["xmin"] - 1000, depth_bbox["ymin"] - 1000)
   
   testthat::expect_warning(
-    suppressMessages(extract_depth_at_point(x = outside_point2, 
-                                            depth_points = depth_points,
-                                            crs = 2193)),
-    "outside the extent of depth points"
+    extract_depth_at_point(x = outside_point2, 
+                           depth_points = depth_points, 
+                           method = "idw",
+                           crs = 2193),
+    "outside the extent of"
   )
   
   # Test point outside contours extent with warning
@@ -262,7 +263,8 @@ test_that("boundary checks work correctly", {
   testthat::expect_warning(
     suppressMessages(extract_depth_at_point(x = outside_point3,
                                             contours = contours,
-                                            crs = sf::st_crs(contours))),
+                                            method = "idw",
+                                            crs = 2193)),
     "outside the extent of contours"
   )
 })
@@ -271,7 +273,7 @@ test_that("cli messages are generated correctly", {
   shoreline <- readRDS(system.file("extdata/rotoma_shoreline.rds",
                                    package = "bathytools"))
   depth_points <- readRDS(system.file("extdata/depth_points.rds",
-                                    package = "bathytools"))
+                                      package = "bathytools"))
   bathy <- rasterise_bathy(shoreline = shoreline, depth_points = depth_points,
                            crs = 2193, res = 8)
   x <- shoreline |> 
@@ -293,9 +295,9 @@ test_that("cli messages are generated correctly", {
   # Test that informational messages are generated for point extraction
   coords <- depth_points[1, ] |> unlist()
   testthat::expect_message(
-    extract_depth_at_point(x = c(coords[1], coords[2]),
-                          depth_points = depth_points, crs = 4326),
-    "Extracting depth from point data"
+    extract_depth_at_point(x = c(coords[1], coords[2]), method = "idw",
+                           depth_points = depth_points, crs = 4326),
+    "Performing IDW interpolation from"
   )
 })
 
