@@ -22,8 +22,6 @@
   multipolygon
 - [`detect_shoreline()`](detect_shoreline.md) : Extract the outer
   shoreline of a lake multipolygon
-- [`est_res()`](est_res.md) : Estimate an appropriate raster resolution
-  for a spatial polygon
 - [`estimate_bathymetry()`](estimate_bathymetry.md) : Estimate
   bathymetry from a shoreline polygon using distance transformation.
 - [`extract_depth_at_point()`](extract_depth_at_point.md) : Extract Lake

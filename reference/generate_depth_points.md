@@ -66,7 +66,7 @@ package = "bathytools"))
 depth_points <- generate_depth_points(shoreline = shoreline,
 depth_points = depth_points)
 #> ℹ Generating depth points for interpolation
-#> ✔ Generating depth points for interpolation [217ms]
+#> ✔ Generating depth points for interpolation [201ms]
 #> 
 
 # Generate depth points with contours ----
@@ -88,6 +88,6 @@ contours = contours)
 #> Warning: repeating attributes for all sub-geometries for which they may not be constant
 #> Warning: repeating attributes for all sub-geometries for which they may not be constant
 #> Warning: large number of points for interpolation (100695)
-#> ✔ Generating depth points for interpolation [4.2s]
+#> ✔ Generating depth points for interpolation [4.3s]
 #> 
 ```
