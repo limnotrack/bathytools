@@ -67,8 +67,16 @@ bathy <- rasterise_bathy(shoreline = shoreline, depth_points = depth_points,
   volume of a lake using bathymetry data or a hypsograph
 - [`check_for_islands()`](check_for_islands.md) : Check for islands in a
   set of polygons
+- [`contours_to_raster()`](contours_to_raster.md) : Convert lake depth
+  contours to a raster
 - [`dem_to_hypsograph()`](dem_to_hypsograph.md) : Extend a hypsograph
   from a DEM
+- [`detect_islands()`](detect_islands.md) : Detect islands within a lake
+  multipolygon
+- [`detect_shoreline()`](detect_shoreline.md) : Extract the outer
+  shoreline of a lake multipolygon
+- [`est_res()`](est_res.md) : Estimate an appropriate raster resolution
+  for a spatial polygon
 - [`estimate_bathymetry()`](estimate_bathymetry.md) : Estimate
   bathymetry from a shoreline polygon using distance transformation.
 - [`extract_depth_at_point()`](extract_depth_at_point.md) : Extract Lake

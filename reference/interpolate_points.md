@@ -92,7 +92,7 @@ depth_points <- readRDS(system.file("extdata/depth_points.rds",
 depth_points <- generate_depth_points(shoreline = shoreline,
 depth_points = depth_points)
 #> ℹ Generating depth points for interpolation
-#> ✔ Generating depth points for interpolation [190ms]
+#> ✔ Generating depth points for interpolation [187ms]
 #> 
 bathy_raster <- interpolate_points(depth_points = depth_points, shoreline = shoreline,
 crs = 2193)
@@ -100,6 +100,6 @@ crs = 2193)
 #> ℹ Adjusting depths >= 0 to -0.82m
 #> ℹ Interpolating depth points to raster
 
-#> ✔ Interpolating depth points to raster [13.9s]
+#> ✔ Interpolating depth points to raster [11.6s]
 #> 
 ```

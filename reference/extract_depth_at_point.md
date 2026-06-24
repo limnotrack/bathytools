@@ -13,12 +13,14 @@ extract_depth_at_point(
   x,
   bathy_raster = NULL,
   depth_points = NULL,
+  shoreline = NULL,
+  islands = NULL,
   contours = NULL,
   crs = NULL,
-  method = NULL,
+  method = c("bilinear", "simple", "nearest", "idw"),
   max_dist = Inf,
   idw_power = 2,
-  n_neighbors = 5
+  n_neighbors = 50
 )
 ```
 
@@ -43,6 +45,20 @@ extract_depth_at_point(
   along with `contours` (but not `bathy_raster`), this will be used
   preferentially.
 
+- shoreline:
+
+  sf POLYGON or MULTIPOLYGON object representing the shoreline. Optional
+  but required if `contours` are provided, as the shoreline is used to
+  define the lake boundary for interpolation. Ignored if `contours` is
+  not provided.
+
+- islands:
+
+  sf POLYGON or MULTIPOLYGON object representing any islands in the
+  lake. Default is NULL. Optional but recommended if islands are
+  present, as they can affect the interpolation of depth points and
+  contours.
+
 - contours:
 
   sf LINESTRING or MULTILINESTRING object with contour data. Must
@@ -64,8 +80,7 @@ extract_depth_at_point(
 
   - "simple": nearest cell value from raster
 
-  - "nearest": nearest neighbor from point data or contours (default for
-    point/contour data)
+  - "nearest": nearest neighbor from point data or contours
 
   - "idw": inverse distance weighting from point data
 
@@ -85,7 +100,7 @@ extract_depth_at_point(
 - n_neighbors:
 
   integer. Number of nearest neighbors to use for IDW interpolation.
-  Default is 5.
+  Default is 50.
 
 ## Value
 

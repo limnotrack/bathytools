@@ -44,14 +44,15 @@ depth_points <- readRDS(system.file("extdata/depth_points.rds",
 package = "bathytools"))
 bathy_raster <- rasterise_bathy(shoreline = shoreline,
 depth_points = depth_points, crs = 2193)
+#> No islands found.
 #> ℹ Generating depth points for interpolation
-#> ✔ Generating depth points for interpolation [236ms]
+#> ✔ Generating depth points for interpolation [211ms]
 #> 
 #> ℹ Interpolating depth points to raster
-#> ℹ Adjusting depths >= 0 to -0.81m
+#> ℹ Adjusting depths >= 0 to -0.82m
 #> ℹ Interpolating depth points to raster
 
-#> ✔ Interpolating depth points to raster [2m 10.1s]
+#> ✔ Interpolating depth points to raster [16.5s]
 #> 
 hyps <- bathy_to_hypso(bathy_raster = bathy_raster)
 ```

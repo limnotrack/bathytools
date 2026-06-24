@@ -55,12 +55,14 @@ following priority order: bathymetry raster &gt; point data &gt; contours.</p>
 <span>  <span class="va">x</span>,</span>
 <span>  bathy_raster <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  depth_points <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  shoreline <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  islands <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  contours <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  crs <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  method <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bilinear"</span>, <span class="st">"simple"</span>, <span class="st">"nearest"</span>, <span class="st">"idw"</span><span class="op">)</span>,</span>
 <span>  max_dist <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  idw_power <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  n_neighbors <span class="op">=</span> <span class="fl">5</span></span>
+<span>  n_neighbors <span class="op">=</span> <span class="fl">50</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -86,6 +88,19 @@ column. Optional if <code>bathy_raster</code> or <code>contours</code> is provid
 along with <code>contours</code> (but not <code>bathy_raster</code>), this will be used preferentially.</p></dd>
 
 
+<dt id="arg-shoreline">shoreline<a class="anchor" aria-label="anchor" href="#arg-shoreline"></a></dt>
+<dd><p>sf POLYGON or MULTIPOLYGON object representing the
+shoreline. Optional but required if <code>contours</code> are provided, as the shoreline
+is used to define the lake boundary for interpolation. Ignored if <code>contours</code>
+is not provided.</p></dd>
+
+
+<dt id="arg-islands">islands<a class="anchor" aria-label="anchor" href="#arg-islands"></a></dt>
+<dd><p>sf POLYGON or MULTIPOLYGON object representing any islands in
+the lake. Default is NULL. Optional but recommended if islands are present,
+as they can affect the interpolation of depth points and contours.</p></dd>
+
+
 <dt id="arg-contours">contours<a class="anchor" aria-label="anchor" href="#arg-contours"></a></dt>
 <dd><p>sf LINESTRING or MULTILINESTRING object with contour data.
 Must contain a 'depth' column. Optional if <code>bathy_raster</code> or <code>depth_points</code>
@@ -101,7 +116,7 @@ string. Required if <code>x</code> is numeric; ignored if <code>x</code> is an s
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
 <dd><p>character. Method to use for extraction. Options are:</p><ul><li><p>"bilinear": bilinear interpolation from raster (default for raster)</p></li>
 <li><p>"simple": nearest cell value from raster</p></li>
-<li><p>"nearest": nearest neighbor from point data or contours (default for point/contour data)</p></li>
+<li><p>"nearest": nearest neighbor from point data or contours</p></li>
 <li><p>"idw": inverse distance weighting from point data</p></li>
 </ul><p>Default is "bilinear" for raster data and "nearest" for point/contour data.</p></dd>
 
@@ -119,7 +134,7 @@ Default is 2.</p></dd>
 
 <dt id="arg-n-neighbors">n_neighbors<a class="anchor" aria-label="anchor" href="#arg-n-neighbors"></a></dt>
 <dd><p>integer. Number of nearest neighbors to use for IDW
-interpolation. Default is 5.</p></dd>
+interpolation. Default is 50.</p></dd>
 
 </dl></div>
     <div class="section level2">

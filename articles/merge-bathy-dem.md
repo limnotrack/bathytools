@@ -115,17 +115,18 @@ bathymetry raster.
 bathy_raster <- rasterise_bathy(shoreline = shoreline,
                                 depth_points = point_data, crs = 2193,
                                 res = 8)
+#> No islands found.
 #> ℹ Generating depth points for interpolation
-#> ✔ Generating depth points for interpolation [218ms]
+#> ✔ Generating depth points for interpolation [517ms]
 #> 
 #> ℹ Interpolating depth points to raster
-#> ℹ Adjusting depths >= 0 to -0.81m
+#> ℹ Adjusting depths >= 0 to -0.82m
 #> ℹ Interpolating depth points to raster
 ```
 
 ![](merge-bathy-dem_files/figure-html/generate-bathy-raster-1.png)
 
-    #> ✔ Interpolating depth points to raster [18.8s]
+    #> ✔ Interpolating depth points to raster [1.9s]
 
 ``` r
 
@@ -169,7 +170,7 @@ dem_bath
 #> source(s)   : memory
 #> varname     : dem_32m
 #> name        :  elevation
-#> min value   :  232.82887
+#> min value   : 232.087735
 #> max value   : 599.137573
 ```
 
@@ -224,12 +225,12 @@ depth and area at each depth.
 hyps <- bathy_to_hypso(bathy_raster = bathy_raster)
 head(hyps)
 #>   elev depth     area
-#> 1  0.0   0.0 11261376
-#> 2 -0.2  -0.2 11133427
-#> 3 -0.4  -0.4 11005478
-#> 4 -0.6  -0.6 10877530
-#> 5 -0.8  -0.8 10749581
-#> 6 -1.0  -1.0 10621632
+#> 1  0.0   0.0 11240512
+#> 2 -0.2  -0.2 11091955
+#> 3 -0.4  -0.4 10943398
+#> 4 -0.6  -0.6 10794842
+#> 5 -0.8  -0.8 10646285
+#> 6 -1.0  -1.0 10497728
 ```
 
 The hypsograph can be plotted to show the area of the lake at different
@@ -277,12 +278,12 @@ ext_hyps <- dem_to_hypsograph(shoreline = shoreline, dem_bath = dem_bath,
 
 head(ext_hyps)
 #>    elev depth     area
-#> 1 316.3   3.0 11935744
-#> 2 316.1   2.8 11897856
-#> 3 315.9   2.6 11854848
-#> 4 315.7   2.4 11810816
-#> 5 315.5   2.2 11753472
-#> 6 315.3   2.0 11705344
+#> 1 316.3   3.0 11933696
+#> 2 316.1   2.8 11895808
+#> 3 315.9   2.6 11852800
+#> 4 315.7   2.4 11809792
+#> 5 315.5   2.2 11752448
+#> 6 315.3   2.0 11702272
 ```
 
 The extended hypsograph can be plotted to show the area of the lake at
