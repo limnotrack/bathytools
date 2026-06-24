@@ -23,7 +23,6 @@ Imports:
     tmap,
     units
 Suggests: 
-    aemetools (>= 0.0.0.9000),
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
@@ -35,5 +34,3 @@ Depends:
     R (>= 3.5)
 LazyData: true
 Config/roxygen2/version: 8.0.0
-Remotes:  
-    github::limnotrack/aemetools@dev
